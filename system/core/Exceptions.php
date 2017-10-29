@@ -183,7 +183,7 @@ class CI_Exceptions {
     }
 
     function ErrorPhp($linea, $msj, $archivo) {
-        require APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        require_once APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
 
 
         $mail = new PHPMailer;
