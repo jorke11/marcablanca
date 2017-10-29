@@ -6,7 +6,7 @@
     <div class="row">
         <ul class="nav nav-tabs">
             <?php
-            if ($this->session->userdata("idperfil") == 1) {
+            if ($this->session->userdata("idperfil") == 5) {
                 ?>
                 <li id="tabempresas" ><a href="#empresas" data-toggle="tab">Empresa</a></li>
                 <li id="tabservicios"><a href="#servicios" data-toggle="tab" class="quitaralerta">Servicios</a></li>
