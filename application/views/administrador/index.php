@@ -25,7 +25,7 @@
                 <?php
                 $this->load->view('administrador/empresas');
                 ?>
-            </div>-->
+            </div>
             <div class="tab-pane table-responsive-lx active" id="registro">
                 <?php
                 $this->load->view('administrador/usuarios');
