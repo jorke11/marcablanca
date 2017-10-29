@@ -276,7 +276,7 @@ class Reportes extends MY_Controller {
     public function getConsolidado() {
         $role = "";
 
-        if ($this->session->userdata("idperfil") != 1) {
+        if ($this->session->userdata("idperfil") != 5) {
             $role = "WHERE u.id=" . $this->session->userdata("idusuario");
         }
 
