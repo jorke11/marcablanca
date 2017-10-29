@@ -1,0 +1,1 @@
+docker run -d -v /var/www/html/marcablanca:/var/www/html/marcablanca marcablanca

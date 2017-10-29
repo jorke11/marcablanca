@@ -1,0 +1,63 @@
+<script src="<?php echo base_url() ?>librerias/toastr/toastr.min.js"></script>
+<link href="<?php echo base_url() ?>librerias/toastr/toastr.min.css" rel="stylesheet">
+<link href="<?php echo base_url() ?>librerias/jstree/themes/default/style.css" rel="stylesheet">
+<script src="<?php echo base_url() ?>librerias/jstree/jstree.js"></script>
+<div class="container">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <?php
+            if ($this->session->userdata("idperfil") == 1) {
+                ?>
+                <li id="tabempresas" ><a href="#empresas" data-toggle="tab">Empresa</a></li>
+                <li id="tabservicios"><a href="#servicios" data-toggle="tab" class="quitaralerta">Servicios</a></li>
+
+                <?php
+            }
+            ?>
+
+            <li id="tabusuarios" class="active"><a href="#registro" data-toggle="tab" class="quitaralerta">Registro de Usuarios</a></li>
+            <li id="tabpermissions" class="hidden"><a href="#permissions" data-toggle="tab">Permisos</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+<!--            <div class="tab-pane table-responsive-lx " id="empresas">
+                <?php
+//                $this->load->view('administrador/empresas');
+                ?>
+            </div>-->
+            <div class="tab-pane table-responsive-lx active" id="registro">
+                <?php
+                $this->load->view('administrador/usuarios');
+                ?>
+            </div> 
+<!--            <div class="tab-pane table-responsive-lx" id="carries">
+                <?php
+//                $this->load->view('administrador/carries');
+                ?>
+            </div> 
+            <div class="tab-pane table-responsive-lx" id="servicios">
+                <?php
+//                $this->load->view('administrador/servicios');
+                ?>
+            </div> 
+            <div class="tab-pane table-responsive-lx" id="canales">
+                <?php
+//                $this->load->view('administrador/canales');
+                ?>
+            </div> 
+            <div class="tab-pane table-responsive-lx" id="preferencias">
+                <?php
+//                $this->load->view('administrador/preferencias');
+                ?>
+            </div>-->
+
+            <div class="tab-pane table-responsive-lx" id="permissions">
+                <?php
+                $this->load->view('administrador/permissions');
+                ?>
+            </div>
+        </div>
+
+    </div>
+</div>
