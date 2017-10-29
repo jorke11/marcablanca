@@ -269,6 +269,7 @@ class Reportes extends MY_Controller {
     }
 
     public function consolidado() {
+
         $data["vista"] = "informes/consolidado";
         $this->load->view("template", $data);
     }
@@ -278,6 +279,10 @@ class Reportes extends MY_Controller {
 
         if ($this->session->userdata("idperfil") != 5) {
             $role = "WHERE u.id=" . $this->session->userdata("idusuario");
+        }
+
+        if ($this->session->userdata("idperfil") == 1) {
+            $role = "WHERE u.idmarca=" . $this->session->userdata("client_id");
         }
 
         $sql = "
