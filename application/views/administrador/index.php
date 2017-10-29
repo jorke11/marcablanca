@@ -5,18 +5,20 @@
 <div class="container">
     <div class="row">
         <ul class="nav nav-tabs">
+
+            <li id="tabempresas" ><a href="#empresas" data-toggle="tab">Empresa</a></li>
+            <li id="tabservicios"><a href="#servicios" data-toggle="tab" class="quitaralerta">Servicios</a></li>
+
+
+            <li id="tabusuarios" class="active"><a href="#registro" data-toggle="tab" class="quitaralerta">Registro de Usuarios</a></li>
             <?php
             if ($this->session->userdata("idperfil") == 5) {
                 ?>
-                <li id="tabempresas" ><a href="#empresas" data-toggle="tab">Empresa</a></li>
-                <li id="tabservicios"><a href="#servicios" data-toggle="tab" class="quitaralerta">Servicios</a></li>
-
+                <li id="tabpermissions" class="hidden"><a href="#permissions" data-toggle="tab">Permisos</a></li>
                 <?php
             }
             ?>
 
-            <li id="tabusuarios" class="active"><a href="#registro" data-toggle="tab" class="quitaralerta">Registro de Usuarios</a></li>
-            <li id="tabpermissions" class="hidden"><a href="#permissions" data-toggle="tab">Permisos</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -31,27 +33,27 @@
                 $this->load->view('administrador/usuarios');
                 ?>
             </div> 
-<!--            <div class="tab-pane table-responsive-lx" id="carries">
-                <?php
+            <!--            <div class="tab-pane table-responsive-lx" id="carries">
+            <?php
 //                $this->load->view('administrador/carries');
-                ?>
-            </div> -->
+            ?>
+                        </div> -->
             <div class="tab-pane table-responsive-lx" id="servicios">-
                 <?php
-               $this->load->view('administrador/servicios');
+                $this->load->view('administrador/servicios');
                 ?>
             </div> 
-        
-       <!--     <div class="tab-pane table-responsive-lx" id="canales">
-                <?php
+
+            <!--     <div class="tab-pane table-responsive-lx" id="canales">
+            <?php
 //                $this->load->view('administrador/canales');
-                ?>
-            </div> 
-            <div class="tab-pane table-responsive-lx" id="preferencias">
-                <?php
+            ?>
+                 </div> 
+                 <div class="tab-pane table-responsive-lx" id="preferencias">
+            <?php
 //                $this->load->view('administrador/preferencias');
-                ?>
-            </div>-->
+            ?>
+                 </div>-->
 
             <div class="tab-pane table-responsive-lx" id="permissions">
                 <?php
