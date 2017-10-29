@@ -21,9 +21,9 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
-<!--            <div class="tab-pane table-responsive-lx " id="empresas">
+            <div class="tab-pane table-responsive-lx " id="empresas">
                 <?php
-//                $this->load->view('administrador/empresas');
+                $this->load->view('administrador/empresas');
                 ?>
             </div>-->
             <div class="tab-pane table-responsive-lx active" id="registro">
@@ -35,13 +35,14 @@
                 <?php
 //                $this->load->view('administrador/carries');
                 ?>
-            </div> 
-            <div class="tab-pane table-responsive-lx" id="servicios">
+            </div> -->
+            <div class="tab-pane table-responsive-lx" id="servicios">-
                 <?php
-//                $this->load->view('administrador/servicios');
+               $this->load->view('administrador/servicios');
                 ?>
             </div> 
-            <div class="tab-pane table-responsive-lx" id="canales">
+        
+       <!--     <div class="tab-pane table-responsive-lx" id="canales">
                 <?php
 //                $this->load->view('administrador/canales');
                 ?>
