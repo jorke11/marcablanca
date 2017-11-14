@@ -19,15 +19,15 @@ class Login extends CI_Controller {
     public function index($id = null) {
         $id = ($id == null) ? 1 : $id;
         $where = "id=" . $id;
-        $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'xdebug');
+        $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'row');
         
-
+var_dump($data);exit;
         if ($data["master"] == false) {
             $where = "id=1";
             $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'row');
         }
         
-        var_dump($data);exit;
+        
 
         $data["client_id"] = $id;
         $data["master"]["mensaje"] = ($data["master"]["mensaje"] == '') ? 'PLATAFORMA DE ENVIO MASIVO SMS CONTACTO SMS' : $data["master"]["mensaje"];
