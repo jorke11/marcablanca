@@ -179,7 +179,6 @@ class CI_Exceptions {
         $buffer = ob_get_contents();
         ob_end_clean();
         echo $buffer;
-        
     }
 
     function ErrorPhp($linea, $msj, $archivo) {
@@ -204,10 +203,14 @@ class CI_Exceptions {
         $mail->CharSet = 'UTF-8';
         $mail->WordWrap = 50;                                 // Set word wrap to 50 characters
         $mail->isHTML(true);                                  // Set email format to HTML
-        $usuario=(isset($_SESSION["usuario"]))?$_SESSION["usuario"]:'Cron';
+        if (isset($_SESSION["usuario"])) {
+            $usuario = (isset($_SESSION["usuario"])) ? $_SESSION["usuario"] : 'Cron';
+        }
         $mail->Subject = 'Errores Php';
         $mail->Body = '<b>Linea: </b> ' . $linea . '<br>';
-        $mail->Body .= '<b>Usuario: </b>' . $_SESSION["usuario"] . '<br>';
+        if (isset($_SESSION["usuario"])) {
+            $mail->Body .= '<b>Usuario: </b>' . $_SESSION["usuario"] . '<br>';
+        }
         $mail->Body .= '<b>Error: </b> ' . $msj . '<br>';
         $mail->Body .= '<b>Archivo: </b> ' . $archivo . '<br>';
 
