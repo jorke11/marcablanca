@@ -133,6 +133,7 @@ class Administrador extends MY_Controller {
         $config['validation'] = TRUE; // bool whether to validate email or not
 
         $in = $this->input->post();
+        $sesion = $this->session->userdata("marca");
 
         $user_id = $this->session->userdata("idusuario");
         $datos = $this->AdministradorModel->buscar('usuarios', 'clave', "id=" . $user_id, 'row');
@@ -142,7 +143,7 @@ class Administrador extends MY_Controller {
 
             $this->email->initialize($config);
             $this->email->from('Notificaciones Contactosms');
-            $this->email->to("servicioalcliente@contactosms.com.co");
+            $this->email->to("servicioalcliente@contactosms.com.co," . $sesion["correo"]);
             $this->email->subject('Cambio de clave');
             $sms = "[" . date("Y-m-d H:i") . "] Usuario [" . $this->session->userdata("usuario") . "] cambio clave:[" . $in["password"] . "]<br>Contactosms";
             $this->email->message($sms);
