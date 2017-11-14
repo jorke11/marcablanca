@@ -27,12 +27,12 @@ $(function () {
                 {data: "campo1"},
                 {data: "campo2"},
                 {data: "campo3"},
-                {data: "campo4"},
-                {data: "campo5"},
-                {data: "campo6"},
-                {data: "campo7"},
-                {data: "campo8"},
-                {data: "campo9"},
+                {data: "filtro1"},
+                {data: "filtro2"},
+                {data: "filtro3"},
+                {data: "filtro4"},
+                {data: "filtro5"},
+                {data: "filtro6"},
             ],
         });
     })
