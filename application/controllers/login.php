@@ -27,7 +27,7 @@ class Login extends CI_Controller {
             $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'row');
         }
         
-        var_dump($data["master"]);exit;
+        var_dump($data);exit;
 
         $data["client_id"] = $id;
         $data["master"]["mensaje"] = ($data["master"]["mensaje"] == '') ? 'PLATAFORMA DE ENVIO MASIVO SMS CONTACTO SMS' : $data["master"]["mensaje"];
