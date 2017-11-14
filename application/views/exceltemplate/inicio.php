@@ -83,7 +83,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-lg-7 col-md-3 col-sm-3"><h3 class="panel-title"><b>Cargar Template XLS File</b></h3></div>
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-right"><a href="<?php echo base_url() ?>formatos/formatoenvio.xls"><b>Descarga Plantilla</b></a></div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-right"><a href="<?php echo base_url() ?>formatos/upload_template.xls"><b>Descarga Plantilla</b></a></div>
                     </div>
 
                 </div>
