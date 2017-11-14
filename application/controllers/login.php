@@ -8,7 +8,7 @@ class Login extends CI_Controller {
     public function __construct() {
 
         parent::__construct();
-        
+
         date_default_timezone_set("America/Bogota");
         $this->load->model("LoginModel");
     }
@@ -20,8 +20,8 @@ class Login extends CI_Controller {
         $id = ($id == null) ? 1 : $id;
         $where = "id=" . $id;
         $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'row');
-        
-        
+
+
         if ($data["master"] == false) {
             $where = "id=1";
             $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'row');
@@ -29,10 +29,11 @@ class Login extends CI_Controller {
 
         $data["client_id"] = $id;
         $data["master"]["mensaje"] = ($data["master"]["mensaje"] == '') ? 'PLATAFORMA DE ENVIO MASIVO SMS CONTACTO SMS' : $data["master"]["mensaje"];
-        $data["master"]["url"] = ($data["master"]["url"] == '') ? 'imagenes/logo.png' : $data["master"]["url"];
-        $data["master"]["titulologin"] = ($data["master"]["titulologin"] == '') ? 'ContactoSMS' : $data["master"]["titulologin"];
+        $data["master"]["url"] = (isset($data["master"]["url"]) && $data["master"]["url"] == '') ? 'imagenes/logo.png' : $data["master"]["url"];
+        $data["master"]["titulologin"] = (isset($data["master"]["titulologin"]) && $data["master"]["titulologin"] == '') ? 'ContactoSMS' : $data["master"]["titulologin"];
         $data["error"] = '';
-        print_r($data);exit;
+        print_r($data);
+        exit;
         $this->load->view('login', $data);
     }
 
