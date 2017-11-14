@@ -10,6 +10,9 @@ user_guide_src/cilexer/build/*
 user_guide_src/cilexer/dist/*
 user_guide_src/cilexer/pycilexer.egg-info/*
 
+application/config/database.php
+
+
 #codeigniter 3
 application/logs/*
 !application/logs/index.html
@@ -19,3 +22,4 @@ logs/
 nbproject/
 planos/
 planos.c/
+application/config/database.php
