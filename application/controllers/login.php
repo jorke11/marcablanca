@@ -20,7 +20,7 @@ class Login extends CI_Controller {
         $id = ($id == null) ? 1 : $id;
         $where = "id=" . $id;
         $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'row');
-
+        print_r($data["master"]);exit;
 
         if ($data["master"] == false) {
             $where = "id=1";
