@@ -43,10 +43,11 @@ class ExcelTemplate extends MY_Controller {
 
         $data["vista"] = "exceltemplate/inicio";
 
-        $where = '';
+
+        $where = "idmarca= " . $this->session->userdata("client_id");
 
         if ($this->session->userdata("idperfil") != 5) {
-            $where = "idmarca= " . $this->session->userdata("client_id");
+            $where = "id= " . $this->session->userdata("client_id");
         }
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
         $this->load->view("template", $data);
@@ -197,7 +198,7 @@ class ExcelTemplate extends MY_Controller {
             }
 
             $where = "client_id=" . $this->session->userdata("client_id");
-            
+
             $respuesta["data"] = $this->CargaexcelModel->buscar("template_detail", '*', $where);
 
             echo json_encode($respuesta);
@@ -391,12 +392,12 @@ class ExcelTemplate extends MY_Controller {
         $in["campo1"] = $arreglo[2];
         $in["campo2"] = $arreglo[3];
         $in["campo3"] = $arreglo[4];
-        $in["campo4"] = $arreglo[5];
-        $in["campo5"] = $arreglo[6];
-        $in["campo6"] = $arreglo[7];
-        $in["campo7"] = $arreglo[8];
-        $in["campo8"] = $arreglo[9];
-        $in["campo9"] = $arreglo[10];
+        $in["filtro1"] = $arreglo[5];
+        $in["filtro2"] = $arreglo[6];
+        $in["filtro3"] = $arreglo[7];
+        $in["filtro4"] = $arreglo[8];
+        $in["filtro5"] = $arreglo[9];
+        $in["filtro6"] = $arreglo[10];
         $in["client_id"] = $this->session->userdata("client_id");
         $this->CargaexcelModel->insert("template_detail", $in);
     }
