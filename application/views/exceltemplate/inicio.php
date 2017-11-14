@@ -32,22 +32,74 @@
 <script src="<?php echo base_url() ?>public/js/sistema/exceltemplate.js"></script>
 <div class="container">
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-center">
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-lg-7 col-md-3 col-sm-3"><h3 class="panel-title"><b>Upload XLS File</b></h3></div>
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-right"><a href="<?php echo base_url() ?>formatos/formatoenvio.xls"><b>Descarga Plantilla</b></a></div>
+                        <div class="col-lg-7 col-md-3 col-sm-3"><h3 class="panel-title"><b>Envio de mensajes</b></h3></div>
                     </div>
 
                 </div>
                 <div class="panel-body">
                     <div class="container-fluid">
                         <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3"><b>Base</b></div>    
+                            <div class="col-lg-5 col-md-3 col-sm-3">
+                                <select id="template_id" name="template_id" class="form-control">
+                                    <option value="0">Seleccione</option>
+                                    <?php
+                                    foreach ($template as $value) {
+                                        ?>
+                                        <option value="<?php echo $value["id"] ?>"><?php echo $value["description"] ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>    
+                        </div>
+                        <div class="espacio10"></div>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3"><b>Mensaje</b></div>    
+                            <div class="col-lg-5 col-md-3 col-sm-3">
+                                <textarea class="form-control" id="message" name="message"></textarea>
+                            </div>    
+                        </div>
+                        <div class="espacio10"></div>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-lg-offset-5">
+                                <buttton class="btn btn-success" id="btn-send" type="button">Enviar</buttton>
+                            </div>    
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6 ">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-3 col-sm-3"><h3 class="panel-title"><b>Cargar Template XLS File</b></h3></div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-right"><a href="<?php echo base_url() ?>formatos/formatoenvio.xls"><b>Descarga Plantilla</b></a></div>
+                    </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="container-fluid">
+
+                        <div class="row">
                             <form action="" method="POST" id="cargar" name="cargar" enctype="multipart/form-data">
 
                                 <div class="col-lg-12 col-md-12 col-sm-12">
 
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3"><b>Descripcion</b></div>    
+                                        <div class="col-lg-5 col-md-3 col-sm-3"><input id="description" name="description" class="form-control"></div>    
+                                    </div>
+                                    <div class="espacio10"></div>
                                     <div class="row">
                                         <div class="col-lg-3 col-md-3 col-sm-3"><b>Archivo (.xls)</b></div>    
                                         <div class="col-lg-4 col-md-4 col-sm-4">
@@ -89,6 +141,7 @@
 
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -96,170 +149,44 @@
         </div>    
     </div>
 
-    <div class="row">
-        <div class="col-lg-6 col-center">
-
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <form id="frmfecha">
-                        <div class="row">
-                            <div class="col-lg-4"><b>Establecer Fecha de envio</b></div>
-                            <div class="col-lg-6">
-                                <div class="input-group">
-                                    <input type="text" class="form-control fechas" id="fecha" name="fecha" placeholder="dd-md-YYYY">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button" id="boton">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="espacio"></div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <p style="color:red;font-size:14px"><b>IMPORTANTE</b>: Para lo envios programados debe indicar la fecha y hora en la base de datos
-                                    como esta estipulado en la guía o establecerla en la opción de la plataforma <b>ANTES de SUBIR</b> la
-                                    base de datos de la plataforma. De lo contrario el envio se realizara inmediatamente</p>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-
     <div class="espacio"></div>
-
-    <div class="row">
-        <div class="col-lg-3 col-center hidden">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Opciones avanzadas 
-                        <button type="button" class="btn btn-default btn-lg" id="configuracion">
-                            <span class="glyphicon glyphicon-cog"></span>
-                        </button>
-                    </h3>
-
-                </div>
-                <div class="panel-body" style="display:none" id="panelconfig">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <input type="checkbox" id="prueba">&nbsp;Envios de Prueba
-                        </div>
-                    </div>
-
-                    <div class="espacio"></div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <input type="checkbox" id="habilitafecha">&nbsp;Fecha Programada
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="input-group">
-                                <input type="text" class="form-control fechas" disabled id="fechaprogramada" name="fechaprogramada" placeholder="dd-md-YYYY">
-
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </button>
-                                </span>
-
-
-                            </div><!-- /input-group -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
 
 
     <div class="row ">
 
-        <div class="col-lg-6 col-md-6 col-center informacioncarga hidden">
+        <div class="col-lg-12 col-md-12 col-center">
 
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-lg-4"><h3 class="panel-title">Información Carga</h3></div>
-                        <div class="col-lg-6 col-right">
-                            <div class="row">
-                                <div class="col-lg-3 col-md-3">
-                                    <b>Cupo:</b>
-                                </div>
-                                <div class="col-lg-4 col-md-4">
-                                    <span id="cupo"></span>
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
 
                 </div>
                 <div class="panel-body">
 
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <div class="alert alert-success alertaconfimacion hidden"></div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <button type="button" id="confirmacioncarga" class="btn btn-primary">Confirmar carga</button>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <button type="button" id="cancelarcarga" class="btn btn-danger">Cancelar carga</button>
-                        </div>
-                    </div>
-                    <div class="espacio"></div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <b>Codigo Revisión:</b>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="alert alert-info " id="codigorevision"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <b>Subidas con Exito:</b>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="alert alert-info " id="regbuenos"></div>
-                        </div>
-                    </div>
-                    <div class="espacio10"></div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <b>Subidas con Errores:</b>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="alert alert-danger " id="regerrores"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <b>Registro con SMS dobles:</b>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="alert alert-warning " id="regdobles"></div>
-                        </div>
-                    </div>
-
                     <div class="row errorcupos">
-                        <div class="col-lg-6 col-md-6">
-                            <b>Envio efectivo:</b>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="alert alert-success " id="regcupo"></div>
-                            <span id="regcupo"></span>
+                        <div class="col-lg-12 col-md-6">
+                            <table id="tblCargue" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Numero</th>
+                                        <th>Campo1</th>
+                                        <th>Campo2</th>
+                                        <th>Campo3</th>
+                                        <th>Campo4</th>
+                                        <th>Campo5</th>
+                                        <th>Campo6</th>
+                                        <th>Campo7</th>
+                                        <th>Campo8</th>
+                                        <th>Campo9</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -355,60 +282,3 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-<div class="modal fade modalbase">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" style="color:red"><b>3 Primeros Registros del Archivo</b></h4>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <table class="table table-bordered table-condensed" id="tablabase">
-                                <thead>
-                                    <tr align="center">
-                                        <td>Numero</td>
-                                        <td>Mensaje</td>
-                                        <td>Nota</td>
-                                    </tr>
-                                </thead>
-                                <tbody align="center"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" >Cerrar</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
-<div class="modal fade modalaviso2">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Aviso</h4>
-            </div>
-            <div class="modal-body">
-                <p>La opción de envio de prueba esta Activo, usted solo podra subir 3 mensajes</p>
-                <p>Desea Continuar?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="continuar2">Si</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
-
-

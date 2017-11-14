@@ -5,15 +5,39 @@ $(function () {
         format: 'd/m/Y H:i',
         timepicker: true
     });
-
     $('#boton').datetimepicker({
         lang: 'es',
         format: 'Y-m-d',
         timepicker: false
     });
+    $("#template_id").change(function () {
+        var param = {};
+        param.template_id = $(this).val();
+
+        $('#tblCargue').DataTable({
+            ajax: {
+                url: 'exceltemplate/getTemplate',
+                data: param,
+                method: "POST"
+            },
+            destroy: true,
+            columns: [
+                {data: "id"},
+                {data: "phone"},
+                {data: "campo1"},
+                {data: "campo2"},
+                {data: "campo3"},
+                {data: "campo4"},
+                {data: "campo5"},
+                {data: "campo6"},
+                {data: "campo7"},
+                {data: "campo8"},
+                {data: "campo9"},
+            ],
+        });
+    })
 
     var objexcel = {}, infocarga = {};
-
     $("#configuracion").click(function () {
 
         if ($("#panelconfig").hasClass("open")) {
@@ -37,7 +61,6 @@ $(function () {
             alert("formato no valido");
         }
     });
-
     $("#subir").click(function () {
 
         var string = "", fecha = "", html = '', html2 = '';
@@ -59,9 +82,6 @@ $(function () {
             } else {
 
                 var res = preCarga2("exceltemplate/preCarga");
-
-
-
                 res.success(function (data) {
                     $("#tablainfo tbody").empty();
                     $("#tablaanterior tbody").empty();
@@ -72,7 +92,6 @@ $(function () {
                     html += "<tr><td><b>Nombre Archivo</b></td><td>" + data.nombreactual + "</td></tr>";
                     html2 = "<tr><td><b>Registro a cargados</b></td><td>" + data.registrosanterior + "</td><tr>";
                     html2 += "<tr><td><b>Nombre Archivo</b></td><td>" + data.nombreaanterior + "</td></tr>";
-
                     if (data.nombreactual == data.nombreaanterior) {
                         $(".alerta").removeClass("hidden").html("<b>Probablemente este Subiendo la misma base Anterior!, Desea Continuar?</b>");
                     } else {
@@ -84,7 +103,6 @@ $(function () {
                     $("#tablaanterior tbody").html(html2);
                     $("#idarchivo").val(data.idarchivo);
                     $("#frmsubida #idbase").val(data.idbase);
-
                 });
             }
 
@@ -92,12 +110,10 @@ $(function () {
             alert("No hay archivos para subir");
         }
     });
-
     $("#descargaExcel").click(function () {
         var idbase = objexcel.idbase;
         window.open('exceltemplate/excelErrores/' + idbase, '_blank');
     });
-
     $("#continuar").click(function () {
         var fecha = "", objeto = {}, ruta = $("#frmsubida #rutaarchivo").val();
         var archivo = $("#frmsubida #idarchivo").val(), idbase = $("#frmsubida #idbase").val(), clase;
@@ -118,38 +134,31 @@ $(function () {
             $("#subir").attr("disabled", true);
             $(".cargando").removeClass("hidden");
             var res = crud(objeto, 'exceltemplate/cargaExcel'), envioefectivo = 0;
-
             res.success(function (data) {
-                objexcel = data;
-                $("#fecha").attr("disabled", true);
-                clase = (data.duplicados == 0) ? '' : 'error';
+
+                $('#tblCargue').DataTable({
+                    data: data.data,
+                    destroy: true,
+                    columns: [
+                        {data: "id"},
+                        {data: "phone"},
+                        {data: "campo1"},
+                        {data: "campo2"},
+                        {data: "campo3"},
+                        {data: "campo4"},
+                        {data: "campo5"},
+                        {data: "campo6"},
+                        {data: "campo7"},
+                        {data: "campo8"},
+                        {data: "campo9"},
+                    ],
+                });
+                $("#subir").attr("disabled", false);
                 $(".cargando").addClass("hidden");
-
-                $(".informacioncarga").removeClass("hidden");
-                $("#codigorevision").html(data.idbase);
-                $("#regbuenos").html('<strong><a href="#" onclick=verBase(' + data.idbase + ')>Vista Previa ' + data.ok + ' SMS</a></string>');
-//                $("#regerrores").html(data.errores + " SMS");
-                $("#regerrores").html('<strong><a href="#" onclick=verErrores(' + data.idbase + ')>Vista Errores ' + data.errores + ' SMS</a><br><br><a href="#" onclick=verBlacklist(' + data.idbase + ')>Vista Blacklist ' + data.blacklist + ' SMS</a></string>');
-                $("#regdobles").html("<span class='" + clase + "'>" + data.duplicados + " SMS </span>");
-
-                if (data.cupo != "undefined") {
-                    $(".errorcupos").removeClass("hidden");
-                    envioefectivo = (parseInt(data.cupo.disponible) >= parseInt(data.ok)) ? data.ok : 0;
-                    $("#regcupo").html('<b>' + envioefectivo + '</b>');
-                    $("#cupo").html('<b>' + (data.cupo.disponible) + '</b>');
-                }
-
-                if (data.errores > 0 || data.blacklist > 0) {
-                    $("#descargaExcel").removeClass("hidden");
-                } else {
-                    $("#descargaExcel").addClass("hidden");
-                }
             });
         }
 
     });
-
-
     $("#continuar2").click(function () {
         $("#registrosOk").addClass("hidden");
         $("#descargaExcel").addClass("hidden");
@@ -159,8 +168,6 @@ $(function () {
     $(".nomodal").click(function () {
         $("#subir").attr("disabled", false);
     });
-
-
     $("#habilitafecha").click(function () {
 
         if ($(this).is(":checked")) {
@@ -193,10 +200,8 @@ $(function () {
                 $("#confirmacioncarga").attr("disabled", true);
                 mensaje("alertaconfimacion", null, "<b>" + data.mensaje + "!</b>");
                 $("#cancelarcarga").attr("disabled", true);
-
             }
             $("#cupo").html(data.cupo.disponible + " SMS");
-
         })
     })
 
@@ -224,56 +229,16 @@ $(function () {
         $("#fecha").attr("disabled", false);
         $(".cargando").addClass("hidden");
         $("#descargaExcel").addClass("hidden");
-
-
     })
 
 
 });
-
 function verErrores(id) {
     var obj = {}, txt = '';
     obj.idbase = id;
     $(".modalbase").modal("show");
     $("#tablabase tbody").empty();
     var res = crud(obj, 'exceltemplate/verErrores');
-    res.success(function (data) {
-        txt = '';
-        $.each(data, function (i, val) {
-            txt += '<tr>';
-            txt += '<td>' + val["numero"] + '</td>';
-            txt += '<td>' + val["mensaje"] + '</td>';
-            txt += '<td>' + val["nota"] + '</td>';
-            txt += '</tr>';
-        })
-        $("#tablabase tbody").html(txt);
-    })
-}
-
-function verBlacklist(id) {
-    var obj = {}, txt = '';
-    obj.idbase = id;
-    $(".modalbase").modal("show");
-    $("#tablabase tbody").empty();
-    var res = crud(obj, 'exceltemplate/verBlacklist');
-    res.success(function (data) {
-        txt = '';
-        $.each(data, function (i, val) {
-            txt += '<tr>';
-            txt += '<td>' + val["numero"] + '</td>';
-            txt += '<td>' + val["mensaje"] + '</td>';
-            txt += '<td>' + val["nota"] + '</td>';
-            txt += '</tr>';
-        })
-        $("#tablabase tbody").html(txt);
-    })
-}
-
-function verBase(id) {
-    var obj = {}, txt = '';
-    obj.idbase = id;
-    $(".modalbase").modal("show");
-    var res = crud(obj, 'exceltemplate/verBase');
     res.success(function (data) {
         txt = '';
         $.each(data, function (i, val) {
@@ -330,25 +295,6 @@ function preCarga2(controlador) {
 
 
 
-function trash() {
-    var objeto = {};
-    $(".cargando").addClass("hidden");
-    objeto.idbase = $("#infobase").val();
-    var res = crud(objeto, 'exceltemplate/borrarArchivo', 'JSON');
-}
-
-var contador = 0;
-var totalregistros;
-var texto = '';
-
-function Reloj() {
-    var tiempo = new Date();
-    var hora = tiempo.getHours();
-    var minuto = tiempo.getMinutes();
-    var segundo = tiempo.getSeconds();
-    log(segundo);
-}
-
 function CargaExcel(objeto) {
     var texto = '';
     $.ajax({
@@ -379,29 +325,11 @@ function CargaExcel(objeto) {
             $("#cargar #subir").attr("disabled", false);
             $("#cargar #spandatos").empty();
             $('#cargar #subir').attr("disabled", true);
-
         }
     })
 
 
 }
-
-
-
-function leerRegistros(objeto) {
-    var res = crud(objeto, "exceltemplate/cuentaRegistros", 'JSON');
-    res.success(function (data) {
-        totalregistros = data.registros;
-    })
-}
-
-function traeRegistros(objeto) {
-    var res = crud(objeto, "exceltemplate/otroRegistros", 'JSON');
-    res.success(function (data) {
-        contador = data.registros;
-    })
-}
-
 
 function preCarga(ruta, fecha) {
     var formData = new FormData($("#cargar")[0]);

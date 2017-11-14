@@ -40,8 +40,19 @@ class ExcelTemplate extends MY_Controller {
      * metodo para cargar la vista principal
      */
     public function index() {
+
         $data["vista"] = "exceltemplate/inicio";
+        $data["template"] = $this->CargaexcelModel->buscar("template", '*');
         $this->load->view("template", $data);
+    }
+
+    function getTemplate() {
+        $in = $this->input->post();
+        echo $this->datatables
+                ->select("*")
+                ->from("template_detail b")
+                ->where(array("template_id" => $in["template_id"]))
+                ->generate();
     }
 
     function borrarArchivo() {
@@ -57,9 +68,7 @@ class ExcelTemplate extends MY_Controller {
         $idbase = 0;
         $this->nombreArchivo = $_FILES["archivo"]["name"];
         $archivo = $_FILES["archivo"]["tmp_name"];
-
-        $data["idempresa"] = $this->idempresa;
-        $data["idusuario"] = $this->idusuario;
+        $post = $this->input->post();
 
         $datos = new Spreadsheet_Excel_Reader();
 
@@ -109,14 +118,14 @@ class ExcelTemplate extends MY_Controller {
         $idarchivo = $this->CargaexcelModel->insert("archivos", $arc);
 
 
-        $data["nombre"] = 'web_' . $data["idempresa"] . '_' . $data["idusuario"] . '_' . date("Y-m-d H:i:s");
+        $data["description"] = $post["description"];
         $data["ip"] = $_SERVER["REMOTE_ADDR"];
-        $data["archoriginal"] = $this->nombreArchivo;
-        $data["fecha"] = date("Y-m-d H:i:s");
-        $data["estado"] = "2";
+        $data["file_name"] = $this->nombreArchivo;
+        $data["finsert"] = date("Y-m-d H:i:s");
+        $data["user_id"] = $this->idusuario;
         unset($data["ruta"]);
 
-        $idbase = $this->CargaexcelModel->insert("bases", $data);
+        $idbase = $this->CargaexcelModel->insert("template", $data);
         $arc["idbase"] = $idbase;
         $idarchivo = $this->CargaexcelModel->update("archivos", $idarchivo, $arc);
         unset($respuesta["ruta"]);
@@ -134,7 +143,6 @@ class ExcelTemplate extends MY_Controller {
         $fechapro = '';
         $this->idbase = 0;
         $data = ($dataext == NULL) ? $this->input->post() : $dataext;
-
 
 
         /**
@@ -169,40 +177,20 @@ class ExcelTemplate extends MY_Controller {
              */
             $this->idbase = $data["idbase"];
 
-
             /**
              * Iteracion para almacenar los datos del archivo en un arreglo
              */
             $contador = 0;
-            foreach ($datos->sheets[0]['cells'] as $cont => $value) {
+            foreach ($datos->sheets[0]['cells'] as $cont => $arreglo) {
                 if ($cont > 1) {
                     $contador++;
-                    $this->agregaDatosSession($value, $fechapro, $cont, $this->idbase);
+                    $this->agregaDatosSession($arreglo, $fechapro, $cont, $this->idbase);
                 }
             }
-            $where = 'idbase=' . $this->idbase . " and error NOT ILIKE '%LISTA NEGRA%'";
-            $error = $this->CargaexcelModel->buscar("errores", 'COUNT(*) total', $where, 'row');
-            $where = 'idbase=' . $this->idbase . " and error ILIKE '%LISTA NEGRA%'";
-            $errorBlack = $this->CargaexcelModel->buscar("errores", 'COUNT(*) total', $where, 'row');
-            $total = $this->CargaexcelModel->buscar("registros", 'COUNT(*) total', 'idbase=' . $this->idbase, 'row');
-            $para["errores"] = $error["total"];
-            $para["registros"] = $total["total"];
-            $this->CargaexcelModel->update("bases", $this->idbase, $para);
 
-            $duplicados = $this->CargaexcelModel->buscar("bases", 'dobles', 'id=' . $this->idbase, 'row');
-            $cupo = $this->CargaexcelModel->CupoActual();
+            $where = "template_id=" . $this->idbase;
 
-
-            $respuesta["errores"] = $error["total"];
-            $respuesta["blacklist"] = $errorBlack["total"];
-            $respuesta["ok"] = $total["total"];
-            $respuesta["idbase"] = $this->idbase;
-            $respuesta["cupo"] = $cupo;
-            $respuesta["duplicados"] = ($duplicados["dobles"] == null) ? 0 : $duplicados["dobles"];
-
-            if ($total["total"] > $cupo["disponible"]) {
-                $respuesta["cupo"] = $total["total"] - $cupo["disponible"];
-            }
+            $respuesta["data"] = $this->CargaexcelModel->buscar("template_detail", '*', $where);
 
             echo json_encode($respuesta);
         }
@@ -228,66 +216,12 @@ class ExcelTemplate extends MY_Controller {
         echo json_encode($arc);
     }
 
-    function subePruebas() {
-        $this->nombreArchivo = $_FILES["archivo"]["name"];
-        $archivo = $_FILES["archivo"]["tmp_name"];
-
-        /**
-         * Se instancia objeto de la clase para leer el archivo excel
-         */
-        $datos = new Spreadsheet_Excel_Reader();
-        $datos->setOutputEncoding('CP1251');
-        $error = $datos->read($archivo);
-
-        if ($error == '') {
-            foreach ($datos->sheets[0]['cells'] as $i => $value) {
-                if ($i <= 4) {
-                    foreach ($value as $j => $val) {
-                        $arreglo[$i][$j] = $val;
-                    }
-                }
-            }
-        }
-
-        $where = "id = 1";
-        $data["smpp"] = $this->CargaexcelModel->buscar('canales', 'host,port,usr,password,systemtype,nomenclatura', $where, 'row');
-        $smpphost = $data["smpp"]->host;
-        $smppport = $data["smpp"]->port;
-        $systemid = $data["smpp"]->usr;
-        $password = $data["smpp"]->password;
-        $system_type = $data["smpp"]->systemtype;
-        $from = "contactos";
-
-        $smpp = new SMPPClass();
-        $smpp->SetSender($from);
-
-        $conectado = $smpp->Start($smpphost, $smppport, $systemid, $password, $system_type);
-
-        $keys = $arreglo[1];
-        unset($arreglo[1]);
-        $this->asignaKey($arreglo, $keys);
-
-        $consolidado = $this->asignaKey($arreglo, $keys);
-
-        print_r($conectado);
-
-        if ($conectado == 1) {
-            foreach ($consolidado as $i => $value) {
-                echo $i . " - enviando mensaje " . $value["NUMERO"] . " " . $value["MENSAJE"] . " <br>";
-
-                $resultado = $smpp->Send($value["NUMERO"], $value["MENSAJE"]);
-                //aqui seria hacer el insert a registros...
-            }
-        }
-        $smpp->End();
-    }
-
     function asignaKey($arreglo, $keys) {
         $cont = 0;
         $otro = 0;
 
-        foreach ($arreglo as $i => $value) {
-            foreach ($value as $j => $val) {
+        foreach ($arreglo as $i => $arreglo) {
+            foreach ($arreglo as $j => $val) {
                 $consolidado[$cont][$keys[$j]] = $val;
             }
             $cont++;
@@ -344,7 +278,7 @@ class ExcelTemplate extends MY_Controller {
         $error["idbase"] = $idbase;
         $error["fila"] = $fila;
         $error["fecha"] = date("Y-m-d H:i:s");
-        $this->CargaexcelModel->insert("errores", $error);
+        $this->CargaexcelModel->insert("template_errores", $error);
     }
 
     /**
@@ -356,64 +290,20 @@ class ExcelTemplate extends MY_Controller {
     function agregaDatosSession($arreglo, $fila, $idbase) {
         $programado = explode(" ", date("Y/m/d H:i:s"));
 
+        $validado = NULL;
+        $validaNum = $this->validaNumero($arreglo[1]);
 
-//        if (isset($arreglo[3])) {
-//            $UNIX_DATE = ($arreglo[3] - 25569) * 86400;
-//            $arreglo[3] = gmdate("Y/m/d", $UNIX_DATE);
-//            $programado = explode(" ", $arreglo[3]);
-//        }
+        if ($validaNum[0] == TRUE) {
+            $validado = $this->validaFila($arreglo);
 
-        $programado = $arreglo[3];
-
-        print_r($arreglo);
-        exit;
-
-        $valFecha = $this->calculaFecha($programado[0], $programado[1]);
-
-        if ($valFecha[0] == true) {
-
-            $validaNum = $this->validaNumero($arreglo[1]);
-
-            if (isset($arreglo[3]) != '' && $arreglo[3] != '') {
-                if ($validaNum[0] == TRUE) {
-                    if (!empty($arreglo[2]) && isset($arreglo[2])) {
-                        $validado = NULL;
-                        $nombres = array('numero', 'mensaje', 'nota');
-                        $campos = 'coalesce(enviados,0) + coalesce(pendientes,0) consumo';
-                        $consumo = $this->CargaexcelModel->buscar("usuarios", $campos, 'id=' . $this->idusuario, 'row');
-                        $servicio = $this->CargaexcelModel->buscar("servicios", 'coalesce(maximo,0) maximo', 'id=' . $this->session->userdata("idservicio"), 'row');
-                        $disponible = $servicio["maximo"] - $consumo["consumo"];
-
-                        if ($disponible >= 1) {
-                            $validado = $this->validaFila($arreglo);
-                            if (is_array($validado)) {
-
-                                if (isset($validado[1])) {
-                                    $this->insertRegistros($validado);
-                                    $validado = '';
-                                } else {
-                                    $arregloTodo[] = $validado;
-                                    $this->insertRegistros($arregloTodo);
-                                    $arregloTodo = '';
-                                }
-                            } else {
-                                $this->insertaErrores(str_replace("error:", '', $validado), $arreglo, $idbase, $fila);
-                            }
-                        } else {
-                            $this->insertaErrores("El usuario no cuenta con cupo suficiente", $arreglo, $idbase, $fila);
-                        }
-                    } else {
-                        $this->insertaErrores("Contenido del mensaje vacio", $arreglo, $idbase, $fila);
-                    }
-                } else {
-                    $this->insertaErrores($validaNum[1], $arreglo, $idbase, $fila);
-                }
+            if (is_array($validado)) {
+                $this->insertRegistros($validado);
+                $validado = '';
             } else {
-                $this->insertaErrores("Campo 1 es obligatorio", $arreglo, $idbase, $fila);
+                $this->insertaErrores(str_replace("error:", '', $validado), $arreglo, $idbase, $fila);
             }
         } else {
-
-            $this->insertaErrores($valFecha[1], $arreglo, $idbase, $fila);
+            $this->insertaErrores("Campo 1 es obligatorio", $arreglo, $idbase, $fila);
         }
     }
 
@@ -464,117 +354,25 @@ class ExcelTemplate extends MY_Controller {
         $smsdobles = 0;
         $preferencias = '';
 
-        $arreglo["mensaje"] = $this->LimpiaMensaje($fila[2]);
+        $fila[1] = $this->LimpiaMensaje($fila[1]);
 
-        $arreglo["numero"] = $this->LimpiaMensaje($fila[1]);
+        for ($i = 1; $i < 10; $i++) {
+            $fila[$i] = $this->LimpiaMensaje($fila[$i]);
+        }
 
-        $fila[3] = (isset($fila[3])) ? $fila[3] : '';
-
-        $arreglo["nota"] = $this->LimpiaMensaje($fila[3]);
-        $arreglo["flash"] = (isset($fila[6]) && $fila[6] == 'SI') ? 1 : 0;
-        $arreglo["correo"] = (isset($fila[7])) ? $fila[7] : '';
-        $arreglo["fechaprogramado"] = (isset($fila[4])) ? $fila[4] : '';
         /**
          * Se valida la longitud del dato segun su tipo
          */
-        $mensaje = (strlen($arreglo["mensaje"]) <= 160) ? $arreglo["mensaje"] : FALSE;
+        $existe = $this->validaPrefijo($fila[1]);
 
-        $existe = $this->validaPrefijo($arreglo["numero"]);
+        if ($existe == null) {
+            $errorSms .= "Prefijo no existe";
+        }
 
         /**
          * si no existe el carriers agrega el primero por defecto del usuario
          */
-        $preferencias = $this->CargaexcelModel->Buscar("usuarios", '*', 'id=' . $this->session->userdata("idusuario"), 'row');
-
-        $busca = explode(",", $preferencias["preferencias"]);
-        $resta = (int) $existe["codigo"] - 1;
-        $preferencias["idcanal"] = $busca[$resta];
-
-        if (empty($preferencias)) {
-            $preferencias = $this->CargaexcelModel->Buscar("canales", 'id as idcanal', null, 'row');
-        }
-
-        /**
-         * Valida el perfil y la hora para establecer el estado del registro
-         */
-        list($hora, $min, $seg) = explode(":", date("H:i:s"));
-        $estadoHora = ($hora >= 20) ? TRUE : FALSE;
-
-        $this->estado = ($estadoHora == TRUE || $this->estadoPerfil == 6) ? 6 : 4;
-
-        /**
-         * Se valia si el mensaje supero los 160 caracteres y si no existe error con el numero
-         */
-        $where = "numero='" . $arreglo["numero"] . "' and user_id=" . $this->session->userdata("idusuario");
-        $black = $this->CargaexcelModel->Buscar("blacklist", "*", $where, 'row');
-
-        if ($black == false) {
-
-            if ($mensaje == FALSE) {
-
-                /**
-                 * Se verifica si el usuario cuenta con la opcion para concatenar
-                 */
-                $concatena = $this->session->userdata("concatena");
-
-                if ($concatena == 1) {
-
-                    /**
-                     * Si puede concatenar dividalo de tal manera que lo pueda enviar
-                     */
-                    $anterior = 0;
-
-                    $tam = ceil(strlen($arreglo["mensaje"]) / 160);
-                    $sms = array();
-                    for ($i = 1; $i <= $tam; ++$i) {
-                        $largo = $i * 160;
-                        $sms[$i]["numero"] = $arreglo["numero"];
-                        $sms[$i]["mensaje"] = trim(substr($arreglo["mensaje"], $anterior, 160));
-                        $sms[$i]["nota"] = $arreglo["nota"];
-                        $sms[$i]["idcarrie"] = (isset($existe["codigo"])) ? $existe["codigo"] : '0';
-                        $sms[$i]["orden"] = $i;
-                        $sms[$i]["cargue"] = 'web';
-                        $sms[$i]["idbase"] = $this->idbase;
-                        $sms[$i]["estado"] = $this->estado;
-                        $sms[$i]["fechacargue"] = date("Y-m-d H:i:s");
-                        $sms[$i]["idcanal"] = $preferencias["idcanal"];
-                        $sms[$i]["flash"] = (isset($fila[4]) && $fila[4] == 'SI') ? 1 : 0;
-                        $sms[$i]["fechaprogramado"] = (isset($fila[4])) ? $fila[4] : date("Y-m-d H:i");
-                        $anterior = $largo;
-                    }
-
-                    $arreglo = $sms;
-
-                    $dobles = $this->CargaexcelModel->buscar("bases", 'dobles', 'id=' . $this->idbase, 'row');
-                    $datadobles["dobles"] = $dobles["dobles"] + 1;
-                    $this->CargaexcelModel->update("bases", $this->idbase, $datadobles);
-                } else {
-                    /**
-                     * Si no cuenta con la opcion de concatenar agregue un error
-                     */
-                    $errorSms = "No tiene permisos para contactenar sms supera los 160,";
-                }
-            } else {
-                /**
-                 * En caso de que no supere los 160 caracteres
-                 */
-                $arreglo["estado"] = $this->estado;
-                $arreglo["mensaje"] = $mensaje;
-                $arreglo["nota"] = $arreglo["nota"];
-                $arreglo["idcarrie"] = $existe["codigo"];
-                $arreglo["orden"] = 1;
-                $arreglo["idcanal"] = $preferencias["idcanal"];
-                $arreglo["fechacargue"] = date("Y-m-d H:i:s");
-            }
-        } else {
-            $errorSms = "NUMERO EN LISTA NEGRA - " . $arreglo["numero"];
-        }
-
-
-        /**
-         * Si no existe ningun error retorn el arreglo  de lo contrario retorne el error
-         */
-        return ($errorSms == '') ? $arreglo : 'error:' . $errorSms;
+        return ($errorSms == '') ? $fila : 'error:' . $errorSms;
     }
 
     /**
@@ -582,12 +380,18 @@ class ExcelTemplate extends MY_Controller {
      * @param type $arreglo
      */
     function insertRegistros($arreglo) {
-
-        foreach ($arreglo as $value) {
-            $value["cargue"] = 'web';
-            $value["idbase"] = $this->idbase;
-            $idinser = $this->CargaexcelModel->insert("registros", $value);
-        }
+        $in["phone"] = $arreglo[1];
+        $in["campo1"] = $arreglo[2];
+        $in["campo2"] = $arreglo[3];
+        $in["campo3"] = $arreglo[4];
+        $in["campo4"] = $arreglo[5];
+        $in["campo5"] = $arreglo[6];
+        $in["campo6"] = $arreglo[7];
+        $in["campo7"] = $arreglo[8];
+        $in["campo8"] = $arreglo[9];
+        $in["campo9"] = $arreglo[10];
+        $in["template_id"] = $this->idbase;
+        $this->CargaexcelModel->insert("template_detail", $in);
     }
 
     /**
@@ -623,9 +427,9 @@ class ExcelTemplate extends MY_Controller {
         /**
          * Se llena el archivo
          */
-        foreach ($datos as $i => $value) {
+        foreach ($datos as $i => $arreglo) {
 
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $cont, $value['numero'])->setCellValue('B' . $cont, $value['mensaje'])->setCellValue('C' . $cont, $value['nota'])->setCellValue('D' . $cont, $value['error']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $cont, $arreglo['numero'])->setCellValue('B' . $cont, $arreglo['mensaje'])->setCellValue('C' . $cont, $arreglo['nota'])->setCellValue('D' . $cont, $arreglo['error']);
             $cont++;
         }
 
