@@ -46,7 +46,7 @@ class ExcelTemplate extends MY_Controller {
         $where = '';
 
         if ($this->session->userdata("idperfil") != 5) {
-            $where = "idmarca= " . $this->session->userdata("client_id");
+            $where = "id= " . $this->session->userdata("client_id");
         }
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
         $this->load->view("template", $data);
