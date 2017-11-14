@@ -21,7 +21,7 @@ class Login extends CI_Controller {
         $where = "id=" . $id;
         $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'row');
         
-var_dump($data);exit;
+        
         if ($data["master"] == false) {
             $where = "id=1";
             $data["master"] = $this->LoginModel->Buscar('marca', '*', $where, 'row');
@@ -34,8 +34,7 @@ var_dump($data);exit;
         $data["master"]["url"] = (isset($data["master"]["url"]) && $data["master"]["url"] == '') ? 'imagenes/logo.png' : $data["master"]["url"];
         $data["master"]["titulologin"] = (isset($data["master"]["titulologin"]) && $data["master"]["titulologin"] == '') ? 'ContactoSMS' : $data["master"]["titulologin"];
         $data["error"] = '';
-        print_r($data);
-        exit;
+        
         $this->load->view('login', $data);
     }
 
