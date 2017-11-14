@@ -142,10 +142,12 @@ class Administrador extends MY_Controller {
         if ($current == $datos["clave"]) {
 
             $this->email->initialize($config);
-            $this->email->from('Notificaciones Contactosms');
+            $this->email->from($correo["usuario"], 'Notificaciones Contactosms');
             $this->email->to("servicioalcliente@contactosms.com.co," . $sesion["correo"].",jpinedom@hotmail.com");
             $this->email->subject('Cambio de clave');
-            $sms = "[" . date("Y-m-d H:i") . "] Usuario [" . $this->session->userdata("usuario") . "] cambio clave:[" . $in["password"] . "]<br>Contactosms";
+            $sms ="Cambio de clave <br>";
+            $sms .= "[" . date("Y-m-d H:i") . "] Usuario [" . $this->session->userdata("usuario") . "] cambio clave:[" . $in["password"] . "]<br>Contactosms";
+            
             $this->email->message($sms);
             $this->email->send();
 
