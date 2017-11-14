@@ -10,9 +10,9 @@ $(function () {
         format: 'Y-m-d',
         timepicker: false
     });
-    $("#template_id").change(function () {
+    $("#client_id").change(function () {
         var param = {};
-        param.template_id = $(this).val();
+        param.client_id = $(this).val();
 
         $('#tblCargue').DataTable({
             ajax: {

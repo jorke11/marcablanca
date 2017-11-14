@@ -42,7 +42,13 @@ class ExcelTemplate extends MY_Controller {
     public function index() {
 
         $data["vista"] = "exceltemplate/inicio";
-        $data["template"] = $this->CargaexcelModel->buscar("template", '*');
+
+        $where = '';
+
+        if ($this->session->userdata("idperfil") != 5) {
+            $where = "id= " . $this->session->userdata("client_id");
+        }
+        $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
         $this->load->view("template", $data);
     }
 
@@ -51,7 +57,7 @@ class ExcelTemplate extends MY_Controller {
         echo $this->datatables
                 ->select("*")
                 ->from("template_detail b")
-                ->where(array("template_id" => $in["template_id"]))
+                ->where(array("client_id" => $in["client_id"]))
                 ->generate();
     }
 
@@ -118,11 +124,11 @@ class ExcelTemplate extends MY_Controller {
         $idarchivo = $this->CargaexcelModel->insert("archivos", $arc);
 
 
-        $data["description"] = $post["description"];
+        $data["description"] = $post["client_id"];
         $data["ip"] = $_SERVER["REMOTE_ADDR"];
         $data["file_name"] = $this->nombreArchivo;
         $data["finsert"] = date("Y-m-d H:i:s");
-        $data["user_id"] = $this->idusuario;
+        $data["client_id"] = $this->session->userdata("client_id");
         unset($data["ruta"]);
 
         $idbase = $this->CargaexcelModel->insert("template", $data);
@@ -180,6 +186,8 @@ class ExcelTemplate extends MY_Controller {
             /**
              * Iteracion para almacenar los datos del archivo en un arreglo
              */
+            $this->CargaexcelModel->borrar("template_detail", array("client_id" => $this->session->userdata("client_id")));
+
             $contador = 0;
             foreach ($datos->sheets[0]['cells'] as $cont => $arreglo) {
                 if ($cont > 1) {
@@ -188,8 +196,8 @@ class ExcelTemplate extends MY_Controller {
                 }
             }
 
-            $where = "template_id=" . $this->idbase;
-
+            $where = "client_id=" . $this->session->userdata("client_id");
+            
             $respuesta["data"] = $this->CargaexcelModel->buscar("template_detail", '*', $where);
 
             echo json_encode($respuesta);
@@ -288,7 +296,6 @@ class ExcelTemplate extends MY_Controller {
      * @return array
      */
     function agregaDatosSession($arreglo, $fila, $idbase) {
-        $programado = explode(" ", date("Y/m/d H:i:s"));
 
         $validado = NULL;
         $validaNum = $this->validaNumero($arreglo[1]);
@@ -390,7 +397,7 @@ class ExcelTemplate extends MY_Controller {
         $in["campo7"] = $arreglo[8];
         $in["campo8"] = $arreglo[9];
         $in["campo9"] = $arreglo[10];
-        $in["template_id"] = $this->idbase;
+        $in["client_id"] = $this->session->userdata("client_id");
         $this->CargaexcelModel->insert("template_detail", $in);
     }
 

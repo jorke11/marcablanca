@@ -33,52 +33,7 @@
 <div class="container">
     <div class="row">
 
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-lg-7 col-md-3 col-sm-3"><h3 class="panel-title"><b>Envio de mensajes</b></h3></div>
-                    </div>
-
-                </div>
-                <div class="panel-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-3"><b>Base</b></div>    
-                            <div class="col-lg-5 col-md-3 col-sm-3">
-                                <select id="template_id" name="template_id" class="form-control">
-                                    <option value="0">Seleccione</option>
-                                    <?php
-                                    foreach ($template as $value) {
-                                        ?>
-                                        <option value="<?php echo $value["id"] ?>"><?php echo $value["description"] ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
-                            </div>    
-                        </div>
-                        <div class="espacio10"></div>
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-3"><b>Mensaje</b></div>    
-                            <div class="col-lg-5 col-md-3 col-sm-3">
-                                <textarea class="form-control" id="message" name="message"></textarea>
-                            </div>    
-                        </div>
-                        <div class="espacio10"></div>
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-3 col-lg-offset-5">
-                                <buttton class="btn btn-success" id="btn-send" type="button">Enviar</buttton>
-                            </div>    
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-6 ">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-center ">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
@@ -96,8 +51,19 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12">
 
                                     <div class="row">
-                                        <div class="col-lg-3 col-md-3 col-sm-3"><b>Descripcion</b></div>    
-                                        <div class="col-lg-5 col-md-3 col-sm-3"><input id="description" name="description" class="form-control"></div>    
+                                        <div class="col-lg-3 col-md-3 col-sm-3"><b>Clientes</b></div>    
+                                        <div class="col-lg-5 col-md-3 col-sm-3">
+                                            <select id="client_id" name="client_id" class="form-control">
+                                                <option value="0">Seleccione</option>
+                                                <?php
+                                                foreach ($client as $value) {
+                                                    ?>
+                                                    <option value="<?php echo $value["id"] ?>"><?php echo $value["nombre"] ?></option>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>    
                                     </div>
                                     <div class="espacio10"></div>
                                     <div class="row">
