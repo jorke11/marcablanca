@@ -12,114 +12,142 @@ $(function () {
 
     $("#btnConsolidate").click(function () {
         var msg = '';
-        valida = [];
-        $("#txtcodigo").html("");
+
         $("#btnSendMsg").attr("disabled", false);
-        valida = $("#destination").createSend($("#message").val());
 
-        if (($("#destination").val()).length != 0 || ($("#message").val()).length != 0) {
-            if ((valida.errados).length > 0) {
-                toastr.error("Se encontraron errores con los numeros, se enviaran los que no tiene error!");
-            }
 
-            $("#message,#destination").removeClass("error");
-            if ($("#message").val() != '' && $("#note").val() != '') {
-                $.ajax({
-                    url: 'SendFast/getCupo',
-                    type: "POST",
-                    dataType: 'JSON',
-                    async: false,
-                    success: (function (data) {
-                        concatena = data.concatena;
-                        next = data.next;
-                        cupo = data.cupo.disponible;
-                    })
+        if ($("#message").val() != '') {
+            $.ajax({
+                url: 'exceltemplatesend/getCupo',
+                type: "POST",
+                dataType: 'JSON',
+                async: false,
+                success: (function (data) {
+                    concatena = data.concatena;
+                    next = data.next;
+                    cupo = data.cupo.disponible;
                 })
+            })
 
-                if (concatena != "1" && ($("#message").val()).length > 160) {
-                    toastr.error("No tiene permitido enviar mas de 160 caracteres, favor contactarse con el área de soporte de CONTACTOSMS");
-                    return false;
-                }
-                $("#modalSms").modal("show");
-                msg = $("#message").val();
-                $("#txtInformation").empty();
-                $("#txtInformation").html("Cantidad Total: <b>"
-                        + ((valida.numeros).length + (valida.errados).length)
-                        + "</b><br>Longitud Mensaje: " + (($("#message").val()).length)
-                        + "</b><br>Total Envio: " + ((valida.numeros).length)
-                        + "</b><br>Total Errores: " + ((valida.errados == '') ? 0 : valida.errados.length)
-                        + "<br>Cupo: " + cupo);
-                // $("#txtMensaje").html("<p>Mensaje: " + msg + "</p>")
-            } else {
-                $("#message,#note").addClass("error");
-                toastr.error("El Mensaje y la nota no pueden estar vacios!");
+            if (concatena != "1" && ($("#message").val()).length > 160) {
+                toastr.error("No tiene permitido enviar mas de 160 caracteres, favor contactarse con el área de soporte de CONTACTOSMS");
+                return false;
             }
+
+
+            msg = $("#message").val();
+
+            processData();
+
+
         } else {
-            $("#message,#destination").addClass("error");
-            toastr.error("No hay destinatarios disponibles!");
+            $("#message,#note").addClass("error");
+            toastr.error("El Mensaje");
         }
-    })
 
-    $("#btnSendMsg").click(function () {
-        var obj = {};
-        obj.data = valida.numeros;
-        $(this).attr("disabled", true);
-        $("#close").attr("disabled", true);
-        valida = $("#destination").validaTextarea();
-        obj.path = path;
-        obj.quantitynumbers = (valida.numeros).length;
-        obj.note = $("#note").val();
-        $("#loading").removeClass("hidden");
-        $.ajax({
-            url: 'SendFast/createFile',
-            type: "post",
-            data: obj,
-            async: true,
-            dataType: 'JSON',
-            error: function () {
-                alert("Hubo problemas");
-            },
-            success: function (data) {
-//                $("#counter").html("Procesando...");
-                path = data.path;
-                idbase = data.idbase;
-                processData();
-//                intervalo = setInterval("processData()", 10000);
-                $("#btnConsolidate,#btnClean").attr("disabled", true);
-                
-            }
-        })
     })
-
 });
+
+function countData() {
+
+}
 
 
 function processData() {
-    var obj = {};
-    obj.path = path;
-    obj.idbase = idbase;
+    var form = {};
+
+    var form = obj.getDataFilter();
+    form.client_id = $("#client_id").val();
+    form.message = $("#message").val();
+
     $.ajax({
-        url: 'SendFast/receiveNumbers',
+        url: 'exceltemplatesend/cargaExcel',
         type: "POST",
         async: true,
-        data: obj,
+        data: form,
         dataType: 'JSON',
         success: function (data) {
-            $("#modalSms").modal("hide");
-//            $(".progress-bar").css("width", data.porcentaje + "%");
-//            $("#txtprocess").html((data.porcentaje).toFixed(1) + "%");
-//            $("#counter").html("<b>" + (data.totalnumbers - data.current) + "</b> de " + data.totalnumbers);
-
             if (data.status == true) {
                 toastr.success("proceso Realizado!");
                 $("#txtcodigo").empty().html("Codigo Verificación: <b>" + data.idbase + "</b>");
-//                clearInterval(intervalo);
                 $("#btnConsolidate,#btnClean").attr("disabled", false);
                 $("#close").attr("disabled", false);
                 $("#loading").addClass("hidden");
-//                $("#counter").html("0 de 0");
             }
 
         }
     });
 }
+
+
+
+
+function exceltempleate() {
+    this.init = function () {
+
+    }
+
+    this.getDataFilter = function () {
+        var form = {};
+
+        var filter1 = [], filter2 = [], filter3 = [], filter4 = [], filter5 = [], filter6 = [];
+
+        $(".filter-1").each(function () {
+            if ($(this).is(":checked")) {
+                filter1.push($(this).val());
+            }
+        })
+        $(".filter-2").each(function () {
+            if ($(this).is(":checked")) {
+                filter2.push($(this).val());
+            }
+        })
+        $(".filter-3").each(function () {
+            if ($(this).is(":checked")) {
+                filter3.push($(this).val());
+            }
+        })
+        $(".filter-4").each(function () {
+            if ($(this).is(":checked")) {
+                filter4.push($(this).val());
+            }
+        })
+        $(".filter-5").each(function () {
+            if ($(this).is(":checked")) {
+                filter5.push($(this).val());
+            }
+        })
+        $(".filter-6").each(function () {
+            if ($(this).is(":checked")) {
+                filter6.push($(this).val());
+            }
+        })
+
+        form.filter1 = filter1;
+        form.filter2 = filter2;
+        form.filter3 = filter3;
+        form.filter4 = filter4;
+        form.filter5 = filter5;
+        form.filter6 = filter6;
+        return form;
+    }
+
+    this.countData = function () {
+        var form = {};
+        form = obj.getDataFilter();
+
+        $.ajax({
+            url: $("#ruta").val() + 'exceltemplatesend/countFilter',
+            type: "POST",
+            data: form,
+            dataType: 'JSON',
+            success: function (data) {
+
+                $("#txtquantity").html("Contactos filtados: " + data.quantity)
+            }
+        });
+    }
+}
+
+var obj = new exceltempleate();
+obj.init();

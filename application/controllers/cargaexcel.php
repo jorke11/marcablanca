@@ -223,6 +223,8 @@ class CargaExcel extends MY_Controller {
                     $this->agregaDatosSession($value, $fechapro, $cont, $this->idbase);
                 }
             }
+            
+            
             $where = 'idbase=' . $this->idbase . " and error NOT ILIKE '%LISTA NEGRA%'";
             $error = $this->CargaexcelModel->buscar("errores", 'COUNT(*) total', $where, 'row');
             $where = 'idbase=' . $this->idbase . " and error ILIKE '%LISTA NEGRA%'";
