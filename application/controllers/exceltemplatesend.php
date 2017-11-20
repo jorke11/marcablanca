@@ -48,7 +48,7 @@ class ExcelTemplateSend extends MY_Controller {
         $where = '';
 
         if ($this->session->userdata("idperfil") != 5) {
-            $where = "id= " . $this->session->userdata("client_id");
+            $where = "idmarca= " . $this->session->userdata("client_id");
         }
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
 
