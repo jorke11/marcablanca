@@ -132,9 +132,10 @@ function exceltempleate() {
         return form;
     }
 
-    this.countData = function () {
-        var form = {};
+    this.countData = function (type) {
+        var form = {}, html = '', checked = '';
         form = obj.getDataFilter();
+        form.type = type;
 
         $.ajax({
             url: $("#ruta").val() + 'exceltemplatesend/countFilter',
@@ -142,8 +143,133 @@ function exceltempleate() {
             data: form,
             dataType: 'JSON',
             success: function (data) {
+                $("#txtquantity").html("Contactos filtados: " + data.quantity);
 
-                $("#txtquantity").html("Contactos filtados: " + data.quantity)
+                if (data.mark.type != "filter1") {
+                    if (data.filter.filter1 != undefined) {
+                        html = '';
+                        $("#list-filter-1").empty();
+                        $.each(data.filter.filter1, function (i, j) {
+                            if (data.mark.filter1 != undefined) {
+                                $.each(data.mark.filter1, function (a, val) {
+                                    if (val == j.filtro1) {
+                                        checked = 'checked'
+                                    }
+                                });
+                            }
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-1" onclick=obj.countData("filter1") value="' + j.filtro1 + '" name="filter1[]">' + j.filtro1 + '</li>';
+                            checked = '';
+                        })
+                        $("#list-filter-1").html(html);
+                    }
+                }
+
+                if (data.mark.type != "filter2") {
+                    if (data.filter.filter2 != undefined) {
+                        html = '';
+                        $("#list-filter-2").empty();
+                        $.each(data.filter.filter2, function (i, j) {
+                            if (data.mark.filter2 != undefined) {
+
+                                $.each(data.mark.filter2, function (a, val) {
+                                    if (val == j.filtro2) {
+                                        checked = 'checked'
+                                    }
+                                });
+                            }
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-2" onclick=obj.countData("filter2") value="' + j.filtro2 + '" name="filter2[]">' + j.filtro2 + '</li>';
+                            checked = '';
+                        })
+                        $("#list-filter-2").html(html);
+                    }
+                }
+
+                if (data.mark.type != "filter3") {
+                    if (data.filter.filter3 != undefined) {
+                        html = '';
+                        $("#list-filter-3").empty();
+                        $.each(data.filter.filter3, function (i, j) {
+
+                            if (data.mark.filter3 != undefined) {
+
+                                $.each(data.mark.filter3, function (a, val) {
+                                    if (val == j.filtro3) {
+                                        checked = 'checked'
+                                    }
+                                });
+                            }
+
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-3" onclick=obj.countData("filter3") value="' + j.filtro3 + '" name="filter3[]">' + j.filtro3 + '</li>';
+                            checked = '';
+                        })
+                        $("#list-filter-3").html(html);
+                    }
+                }
+                if (data.mark.type != "filter4") {
+                    if (data.filter.filter4 != undefined) {
+                        html = '';
+                        $("#list-filter-4").empty();
+                        $.each(data.filter.filter4, function (i, j) {
+
+                            if (data.mark.filter4 != undefined) {
+
+                                $.each(data.mark.filter4, function (a, val) {
+                                    if (val == j.filtro4) {
+                                        checked = 'checked'
+                                    }
+                                });
+                            }
+
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-4" onclick=obj.countData("filter4") value="' + j.filtro4 + '" name="filter4[]">' + j.filtro4 + '</li>';
+                            checked = '';
+                        })
+                        $("#list-filter-4").html(html);
+                    }
+                }
+
+                if (data.mark.type != "filter5") {
+                    if (data.filter.filter5 != undefined) {
+                        html = '';
+                        $("#list-filter-5").empty();
+                        $.each(data.filter.filter5, function (i, j) {
+
+                            if (data.mark.filter5 != undefined) {
+
+                                $.each(data.mark.filter5, function (a, val) {
+                                    if (val == j.filtro5) {
+                                        checked = 'checked'
+                                    }
+                                });
+                            }
+
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-5" onclick=obj.countData("filter5") value="' + j.filtro5 + '" name="filter5[]">' + j.filtro5 + '</li>';
+                            checked = '';
+                        })
+                        $("#list-filter-5").html(html);
+                    }
+                }
+
+                if (data.mark.type != "filter6") {
+                    if (data.filter.filter6 != undefined) {
+                        html = '';
+                        $("#list-filter-6").empty();
+                        $.each(data.filter.filter6, function (i, j) {
+
+                            if (data.mark.filter6 != undefined) {
+
+                                $.each(data.mark.filter6, function (a, val) {
+                                    if (val == j.filtro6) {
+                                        checked = 'checked'
+                                    }
+                                });
+                            }
+
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-6" onclick=obj.countData("filter6") value="' + j.filtro6 + '" name="filter6[]">' + j.filtro6 + '</li>';
+                            checked = '';
+                        })
+                        $("#list-filter-6").html(html);
+                    }
+                }
             }
         });
     }

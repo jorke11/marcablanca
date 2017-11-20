@@ -52,7 +52,7 @@ class ExcelTemplateSend extends MY_Controller {
         }
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
 
-        $filters = $this->ExceltemplateModel->getFilter();
+        $filters = $this->ExceltemplateModel->getFilter(null);
 
         $data["filter1"] = $filters["filter1"];
         $data["filter2"] = $filters["filter2"];
@@ -60,7 +60,6 @@ class ExcelTemplateSend extends MY_Controller {
         $data["filter4"] = $filters["filter4"];
         $data["filter5"] = $filters["filter5"];
         $data["filter6"] = $filters["filter6"];
-//        print_x($data);exit;
         $this->load->view("template", $data);
     }
 
@@ -72,62 +71,7 @@ class ExcelTemplateSend extends MY_Controller {
     }
 
     function getDataFilter($in) {
-        $filter = '';
-        $where = '';
-        if (isset($in["filter1"])) {
-            foreach ($in["filter1"] as $value) {
-                $filter .= ($filter == '') ? '' : " OR";
-                $filter .= " filtro1='" . $value . "'";
-            }
-            $where = "(" . $filter . ")";
-        }
-
-        if (isset($in["filter2"])) {
-            $filter = '';
-            foreach ($in["filter2"] as $value) {
-                $filter .= ($filter == '') ? '' : " OR";
-                $filter .= " filtro2='" . $value . "'";
-            }
-
-            $where .= " AND (" . $filter . ")";
-        }
-
-        if (isset($in["filter3"])) {
-            $filter = '';
-            foreach ($in["filter3"] as $value) {
-                $filter .= ($filter == '') ? '' : " OR";
-                $filter .= " filtro3 ='" . $value . "'";
-            }
-            $where .= " AND (" . $filter . ")";
-        }
-        if (isset($in["filter4"])) {
-            $filter = '';
-            foreach ($in["filter4"] as $value) {
-                $filter .= ($filter == '') ? '' : " OR";
-                $filter .= " filtro4='" . $value . "'";
-            }
-            $where .= " AND (" . $filter . ")";
-        }
-
-        if (isset($in["filter5"])) {
-            $filter = '';
-            foreach ($in["filter5"] as $value) {
-                $filter .= ($filter == '') ? '' : " OR";
-                $filter .= " filtro5='" . $value . "'";
-            }
-            $where .= " AND (" . $filter . ")";
-        }
-        if (isset($in["filter6"])) {
-            $filter = '';
-            foreach ($in["filter6"] as $value) {
-                $filter .= ($filter == '') ? '' : " OR";
-                $filter .= " filtro6='" . $value . "'";
-            }
-            $where .= " AND (" . $filter . ")";
-        }
-
-        $filter .= " client_id=" . $this->session->userdata("client_id");
-
+        $where = $this->ExceltemplateModel->getWhereFilter($in);
         return $this->CargaexcelModel->buscar("template_detail", '*', $where);
     }
 
@@ -147,7 +91,9 @@ class ExcelTemplateSend extends MY_Controller {
 
         $quantity = ($detail == false) ? 0 : count($detail);
 
-        echo json_encode(["quantity" => $quantity, "data" => $detail]);
+        $filter = $this->ExceltemplateModel->getFilter($in);
+
+        echo json_encode(["quantity" => $quantity, "data" => $detail, "filter" => $filter, "mark" => $in]);
     }
 
     function borrarArchivo() {
