@@ -88,68 +88,26 @@
                 <div class="row">
                     <div class="col-lg-2">
                         <ul class="list-group" id="list-filter-1">
-                            <?php
-                            foreach ($filter1 as $value) {
-                                ?>
-                                <li class="list-group-item"><input type="checkbox" class="filter-1" onclick=obj.countData('filter1') value="<?php echo $value["filtro1"] ?>" name="filter1[]"><?php echo $value["filtro1"] ?></li>
-                                <?php
-                            }
-                            ?>
                         </ul>
                     </div>
                     <div class="col-lg-2">
                         <ul class="list-group" id="list-filter-2">
-                            <?php
-                            foreach ($filter2 as $value) {
-                                ?>
-                                <li class="list-group-item"><input type="checkbox" class="filter-2" onclick=obj.countData('filter2') value="<?php echo $value["filtro2"] ?>" name="filter2[]"><?php echo $value["filtro2"] ?></li>
-                                <?php
-                            }
-                            ?>
                         </ul>
                     </div>
                     <div class="col-lg-2">
                         <ul class="list-group" id="list-filter-3">
-                            <?php
-                            foreach ($filter3 as $value) {
-                                ?>
-                                <li class="list-group-item"><input type="checkbox" class="filter-3" onclick=obj.countData('filter3') value="<?php echo $value["filtro3"] ?>" name="filter3[]"><?php echo $value["filtro3"] ?></li>
-                                <?php
-                            }
-                            ?>
                         </ul>
                     </div>
                     <div class="col-lg-2">
                         <ul class="list-group" id="list-filter-4">
-                            <?php
-                            foreach ($filter4 as $value) {
-                                ?>
-                                <li class="list-group-item"><input type="checkbox" class="filter-4" onclick=obj.countData('filter4') value="<?php echo $value["filtro4"] ?>" name="filter4[]"><?php echo $value["filtro4"] ?></li>
-                                <?php
-                            }
-                            ?>
                         </ul>
                     </div>
                     <div class="col-lg-2">
                         <ul class="list-group" id="list-filter-5">
-                            <?php
-                            foreach ($filter5 as $value) {
-                                ?>
-                                <li class="list-group-item"><input type="checkbox" class="filter-5" onclick=obj.countData('filter5') onclick='obj.countData("<?php echo $value["filtro5"] ?>")' value="<?php echo $value["filtro5"] ?>" name="filter5[]"><?php echo $value["filtro5"] ?></li>
-                                <?php
-                            }
-                            ?>
                         </ul>
                     </div>
                     <div class="col-lg-2">
                         <ul class="list-group" id="list-filter-6">
-                            <?php
-                            foreach ($filter6 as $value) {
-                                ?>
-                                <li class="list-group-item"><input type="checkbox" class="filter-6" onclick=obj.countData('filter6') value="<?php echo $value["filtro6"] ?>" name="filter6[]"><?php echo $value["filtro6"] ?></li>
-                                <?php
-                            }
-                            ?>
                         </ul>
                     </div>
 

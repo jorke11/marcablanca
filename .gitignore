@@ -25,3 +25,4 @@ nbproject/
 planos/
 planos.c/
 application/config/database.php
+tmp/

@@ -43,10 +43,10 @@ class ExcelTemplate extends MY_Controller {
 
         $data["vista"] = "exceltemplate/inicio";
 
-        
+
         $where = "idmarca= " . $this->session->userdata("client_id");
 
-        if ($this->session->userdata("idperfil") != 5) {
+        if ($this->session->userdata("idperfil") != 5 && $this->session->userdata("idperfil") != 1) {
             $where = "id= " . $this->session->userdata("idempresa");
         }
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);

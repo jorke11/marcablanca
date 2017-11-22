@@ -47,10 +47,14 @@ class ExcelTemplateSend extends MY_Controller {
 
         $where = '';
 
-        if ($this->session->userdata("idperfil") != 5) {
-            $where = "idmarca= " . $this->session->userdata("client_id");
+        $where = "idmarca= " . $this->session->userdata("client_id");
+
+        if ($this->session->userdata("idperfil") != 5 && $this->session->userdata("idperfil") != 1) {
+            $where = "id= " . $this->session->userdata("idempresa");
         }
+        
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
+
 
         $filters = $this->ExceltemplateModel->getFilter(null);
 
@@ -71,8 +75,23 @@ class ExcelTemplateSend extends MY_Controller {
     }
 
     function getDataFilter($in) {
+
         $where = $this->ExceltemplateModel->getWhereFilter($in);
-        return $this->CargaexcelModel->buscar("template_detail", '*', $where);
+
+        if (strpos($where, "client_id") != 1) {
+            return $this->CargaexcelModel->buscar("template_detail", '*', $where);
+        } else {
+
+            return false;
+        }
+    }
+
+    function getFilter() {
+        $in = $this->input->post();
+
+        $filters = $this->ExceltemplateModel->getFilter($in);
+
+        echo json_encode(["quantity" => 0, "filter" => $filters]);
     }
 
     function getTemplate() {
@@ -90,6 +109,7 @@ class ExcelTemplateSend extends MY_Controller {
         $detail = $this->getDataFilter($in);
 
         $quantity = ($detail == false) ? 0 : count($detail);
+
 
         $filter = $this->ExceltemplateModel->getFilter($in);
 

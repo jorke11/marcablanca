@@ -13,24 +13,27 @@ class ExceltemplateModel extends MY_Model {
     public function getWhereFilter($in = NULL) {
         $filter = '';
         $where = '';
-        
+        $cont = 0;
+
         if (isset($in["filter1"])) {
             foreach ($in["filter1"] as $value) {
                 $filter .= ($filter == '') ? '' : " OR";
                 $filter .= " filtro1='" . $value . "'";
+                $cont++;
             }
             $where = "(" . $filter . ")";
         }
-        
-        
+
+
 
         if (isset($in["filter2"])) {
             $filter = '';
             foreach ($in["filter2"] as $value) {
                 $filter .= ($filter == '') ? '' : " OR";
                 $filter .= " filtro2='" . $value . "'";
+                $cont++;
             }
-            $where.= ($where=='')?'': " AND ";
+            $where .= ($where == '') ? '' : " AND ";
             $where .= " (" . $filter . ")";
         }
 
@@ -39,8 +42,9 @@ class ExceltemplateModel extends MY_Model {
             foreach ($in["filter3"] as $value) {
                 $filter .= ($filter == '') ? '' : " OR";
                 $filter .= " filtro3 ='" . $value . "'";
+                $cont++;
             }
-            $where.= ($where=='')?'': " AND ";
+            $where .= ($where == '') ? '' : " AND ";
             $where .= " (" . $filter . ")";
         }
         if (isset($in["filter4"])) {
@@ -48,8 +52,9 @@ class ExceltemplateModel extends MY_Model {
             foreach ($in["filter4"] as $value) {
                 $filter .= ($filter == '') ? '' : " OR";
                 $filter .= " filtro4='" . $value . "'";
+                $cont++;
             }
-            $where.= ($where=='')?'': " AND ";
+            $where .= ($where == '') ? '' : " AND ";
             $where .= " (" . $filter . ")";
         }
 
@@ -58,8 +63,9 @@ class ExceltemplateModel extends MY_Model {
             foreach ($in["filter5"] as $value) {
                 $filter .= ($filter == '') ? '' : " OR";
                 $filter .= " filtro5='" . $value . "'";
+                $cont++;
             }
-            $where.= ($where=='')?'': " AND ";
+            $where .= ($where == '') ? '' : " AND ";
             $where .= " (" . $filter . ")";
         }
         if (isset($in["filter6"])) {
@@ -67,13 +73,15 @@ class ExceltemplateModel extends MY_Model {
             foreach ($in["filter6"] as $value) {
                 $filter .= ($filter == '') ? '' : " OR";
                 $filter .= " filtro6='" . $value . "'";
+                $cont++;
             }
-            $where.= ($where=='')?'': " AND ";
+            $where .= ($where == '') ? '' : " AND ";
             $where .= " (" . $filter . ")";
         }
-        
-//        echo $where;exit;
+
+
         $where .= ($where == '') ? '' : ' AND';
+
 
         $where .= " client_id=" . $this->session->userdata("client_id");
 
@@ -83,47 +91,49 @@ class ExceltemplateModel extends MY_Model {
     public function getFilter($in) {
 
         $where = $this->getWhereFilter($in);
-        
-        $sql = "
+
+        if ($where != false) {
+            $sql = "
             select filtro1
             from template_detail 
             where " . $where . "
             group by 1 order by 1";
-        
-        $res["filter1"] = $this->db->query($sql)->result_array();
-        
-        $sql = "
+
+            $res["filter1"] = $this->db->query($sql)->result_array();
+
+            $sql = "
             select filtro2
             from template_detail 
             where " . $where . "
             group by 1 order by 1";
-        $res["filter2"] = $this->db->query($sql)->result_array();
-        $sql = "
+            $res["filter2"] = $this->db->query($sql)->result_array();
+            $sql = "
             select filtro3
             from template_detail 
             where " . $where . "
             group by 1 order by 1";
-        $res["filter3"] = $this->db->query($sql)->result_array();
-        $sql = "
+            $res["filter3"] = $this->db->query($sql)->result_array();
+            $sql = "
             select filtro4
             from template_detail 
             where " . $where . "
             group by 1 order by 1";
-        $res["filter4"] = $this->db->query($sql)->result_array();
-        $sql = "
+            $res["filter4"] = $this->db->query($sql)->result_array();
+            $sql = "
             select filtro5
             from template_detail 
             where " . $where . "
             group by 1 order by 1";
-        $res["filter5"] = $this->db->query($sql)->result_array();
-        $sql = "
+            $res["filter5"] = $this->db->query($sql)->result_array();
+            $sql = "
             select filtro6
             from template_detail 
             where " . $where . "
             group by 1 order by 1";
-        $res["filter6"] = $this->db->query($sql)->result_array();
-
-
+            $res["filter6"] = $this->db->query($sql)->result_array();
+        } else {
+            $res = false;
+        }
 
         return $res;
     }

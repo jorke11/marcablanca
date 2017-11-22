@@ -46,11 +46,102 @@ $(function () {
         }
 
     })
+
+    $("#client_id").change(function () {
+        var form = {}, html = '', checked = '';
+        form.client_id = $(this).val();
+
+        $.ajax({
+            url: 'exceltemplatesend/getFilter',
+            type: "POST",
+            async: true,
+            data: form,
+            dataType: 'JSON',
+            success: function (data) {
+                $("#txtquantity").html("Contactos filtados: " + data.quantity);
+
+
+                if (data.filter.filter1 != undefined) {
+                    html = '';
+                    $("#list-filter-1").empty();
+                    $.each(data.filter.filter1, function (i, j) {
+                        html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-1" onclick=obj.countData("filter1",' + form.client_id + ') value="' + j.filtro1 + '" name="filter1[]">' + j.filtro1 + '</li>';
+                        checked = '';
+                    })
+                    $("#list-filter-1").html(html);
+                } else {
+                    $("#list-filter-1").html("");
+                }
+
+                if (data.filter.filter2 != undefined) {
+                    html = '';
+                    $("#list-filter-2").empty();
+                    $.each(data.filter.filter2, function (i, j) {
+                        html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-2" onclick=obj.countData("filter2",' + form.client_id + ') value="' + j.filtro2 + '" name="filter2[]">' + j.filtro2 + '</li>';
+                        checked = '';
+                    })
+                    $("#list-filter-2").html(html);
+                } else {
+                    $("#list-filter-2").html("");
+                }
+
+
+
+                if (data.filter.filter3 != undefined) {
+                    html = '';
+                    $("#list-filter-3").empty();
+                    $.each(data.filter.filter3, function (i, j) {
+                        html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-3" onclick=obj.countData("filter3",' + form.client_id + ') value="' + j.filtro3 + '" name="filter3[]">' + j.filtro3 + '</li>';
+                        checked = '';
+                    })
+                    $("#list-filter-3").html(html);
+                } else {
+                    $("#list-filter-3").html("");
+                }
+
+
+                if (data.filter.filter4 != undefined) {
+                    html = '';
+                    $("#list-filter-4").empty();
+                    $.each(data.filter.filter4, function (i, j) {
+
+                        html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-4" onclick=obj.countData("filter4",' + form.client_id + ') value="' + j.filtro4 + '" name="filter4[]">' + j.filtro4 + '</li>';
+                        checked = '';
+                    })
+                    $("#list-filter-4").html(html);
+                } else {
+                    $("#list-filter-4").html("");
+                }
+
+
+                if (data.filter.filter5 != undefined) {
+                    html = '';
+                    $("#list-filter-5").empty();
+                    $.each(data.filter.filter5, function (i, j) {
+                        html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-5" onclick=obj.countData("filter5",' + form.client_id + ') value="' + j.filtro5 + '" name="filter5[]">' + j.filtro5 + '</li>';
+                        checked = '';
+                    })
+                    $("#list-filter-5").html(html);
+                } else {
+                    $("#list-filter-5").html("");
+                }
+
+
+
+                if (data.filter.filter6 != undefined) {
+                    html = '';
+                    $("#list-filter-6").empty();
+                    $.each(data.filter.filter6, function (i, j) {
+                        html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-6" onclick=obj.countData("filter6",' + form.client_id + ') value="' + j.filtro6 + '" name="filter6[]">' + j.filtro6 + '</li>';
+                    })
+                    $("#list-filter-6").html(html);
+                } else {
+                    $("#list-filter-6").html("");
+                }
+            }
+        });
+    })
 });
-
-function countData() {
-
-}
 
 
 function processData() {
@@ -132,10 +223,12 @@ function exceltempleate() {
         return form;
     }
 
-    this.countData = function (type) {
+    this.countData = function (type, client_id) {
         var form = {}, html = '', checked = '';
         form = obj.getDataFilter();
         form.type = type;
+        form.client_id = client_id;
+        
 
         $.ajax({
             url: $("#ruta").val() + 'exceltemplatesend/countFilter',
@@ -157,7 +250,7 @@ function exceltempleate() {
                                     }
                                 });
                             }
-                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-1" onclick=obj.countData("filter1") value="' + j.filtro1 + '" name="filter1[]">' + j.filtro1 + '</li>';
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-1" onclick=obj.countData("filter1",' + client_id + ') value="' + j.filtro1 + '" name="filter1[]">' + j.filtro1 + '</li>';
                             checked = '';
                         })
                         $("#list-filter-1").html(html);
