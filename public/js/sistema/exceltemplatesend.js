@@ -8,6 +8,8 @@ $(function () {
         $("#txtcodigo").html("");
         $(".progress-bar").css("width", "0%");
         $("#txtprocess").html("0%");
+        $(".informacioncarga").addClass("hidden");
+        $("#txtquantity").html("Contactos filtados: 0");
     })
 
     $("#btnConsolidate").click(function () {
@@ -143,10 +145,27 @@ $(function () {
     })
 });
 
+function verBase(id) {
+    var obj = {}, txt = '';
+    obj.idbase = id;
+    $(".modalbase").modal("show");
+    var res = crud(obj, 'cargaexcel/verBase');
+    res.success(function (data) {
+        txt = '';
+        $.each(data, function (i, val) {
+            txt += '<tr>';
+            txt += '<td>' + val["numero"] + '</td>';
+            txt += '<td>' + val["mensaje"] + '</td>';
+            txt += '<td>' + val["nota"] + '</td>';
+            txt += '</tr>';
+        })
+        $("#tablabase tbody").html(txt);
+    })
+}
+
 
 function processData() {
     var form = {};
-
     var form = obj.getDataFilter();
     form.client_id = $("#client_id").val();
     form.message = $("#message").val();
@@ -158,14 +177,30 @@ function processData() {
         data: form,
         dataType: 'JSON',
         success: function (data) {
-            if (data.status == true) {
-                toastr.success("proceso Realizado!");
-                $("#txtcodigo").empty().html("Codigo Verificación: <b>" + data.idbase + "</b>");
-                $("#btnConsolidate,#btnClean").attr("disabled", false);
-                $("#close").attr("disabled", false);
-                $("#loading").addClass("hidden");
+            var envioefectivo = 0, clase = '';
+            $("#fecha").attr("disabled", true);
+            clase = (data.duplicados == 0) ? '' : 'error';
+            $(".cargando").addClass("hidden");
+
+            $(".informacioncarga").removeClass("hidden");
+            $("#codigorevision").html(data.idbase);
+            $("#regbuenos").html('<strong><a href="#" onclick=verBase(' + data.idbase + ')>Vista Previa ' + data.ok + ' SMS</a></string>');
+//                $("#regerrores").html(data.errores + " SMS");
+            $("#regerrores").html('<strong><a href="#" onclick=verErrores(' + data.idbase + ')>Vista Errores ' + data.errores + ' SMS</a><br><br><a href="#" onclick=verBlacklist(' + data.idbase + ')>Vista Blacklist ' + data.blacklist + ' SMS</a></string>');
+            $("#regdobles").html("<span class='" + clase + "'>" + data.duplicados + " SMS </span>");
+
+            if (data.cupo != "undefined") {
+                $(".errorcupos").removeClass("hidden");
+                envioefectivo = (parseInt(data.cupo.disponible) >= parseInt(data.ok)) ? data.ok : 0;
+                $("#regcupo").html('<b>' + envioefectivo + '</b>');
+                $("#cupo").html('<b>' + (data.cupo.disponible) + '</b>');
             }
 
+            if (data.errores > 0 || data.blacklist > 0) {
+                $("#descargaExcel").removeClass("hidden");
+            } else {
+                $("#descargaExcel").addClass("hidden");
+            }
         }
     });
 }
@@ -228,7 +263,7 @@ function exceltempleate() {
         form = obj.getDataFilter();
         form.type = type;
         form.client_id = client_id;
-        
+
 
         $.ajax({
             url: $("#ruta").val() + 'exceltemplatesend/countFilter',

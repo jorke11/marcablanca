@@ -59,8 +59,104 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <span id="txtquantity">Contactos filtados:0</span>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <span id="txtquantity">Contactos filtados:0</span>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="row">
+
+                            <div class="col-lg-12 col-md-12 col-center informacioncarga hidden">
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-lg-4"><h3 class="panel-title">Información Carga</h3></div>
+                                            <div class="col-lg-6 col-right">
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-3">
+                                                        <b>Cupo:</b>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4">
+                                                        <span id="cupo"></span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="alert alert-success alertaconfimacion hidden"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <button type="button" id="confirmacioncarga" class="btn btn-primary">Confirmar carga</button>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <button type="button" id="cancelarcarga" class="btn btn-danger">Cancelar carga</button>
+                                            </div>
+                                        </div>
+                                        <div class="espacio"></div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <b>Codigo Revisión:</b>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="alert alert-info " id="codigorevision"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <b>Subidas con Exito:</b>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="alert alert-info " id="regbuenos"></div>
+                                            </div>
+                                        </div>
+                                        <div class="espacio10"></div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <b>Subidas con Errores:</b>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="alert alert-danger " id="regerrores"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <b>Registro con SMS dobles:</b>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="alert alert-warning " id="regdobles"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row errorcupos">
+                                            <div class="col-lg-6 col-md-6">
+                                                <b>Envio efectivo:</b>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="alert alert-success " id="regcupo"></div>
+                                                <span id="regcupo"></span>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="row">
@@ -130,6 +226,39 @@
     </div>
 </div>
 
+
+<div class="modal fade modalbase">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" style="color:red"><b>3 Primeros Registros del Archivo</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <table class="table table-bordered table-condensed" id="tablabase">
+                                <thead>
+                                    <tr align="center">
+                                        <td>Numero</td>
+                                        <td>Mensaje</td>
+                                        <td>Nota</td>
+                                    </tr>
+                                </thead>
+                                <tbody align="center"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" >Cerrar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="modalSms">

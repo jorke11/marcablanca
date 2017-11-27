@@ -52,7 +52,7 @@ class ExcelTemplateSend extends MY_Controller {
         if ($this->session->userdata("idperfil") != 5 && $this->session->userdata("idperfil") != 1) {
             $where = "id= " . $this->session->userdata("idempresa");
         }
-        
+
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
 
 
@@ -228,11 +228,9 @@ class ExcelTemplateSend extends MY_Controller {
 
 
         foreach ($data as $cont => $arreglo) {
-            if ($cont > 1) {
-                $contador++;
-                $this->agregaDatosSession($arreglo, $cont, $this->idbase);
-            }
+            $this->agregaDatosSession($arreglo, $cont, $this->idbase);
         }
+        
 
         $where = 'idbase=' . $this->idbase . " and error NOT ILIKE '%LISTA NEGRA%'";
         $error = $this->CargaexcelModel->buscar("errores", 'COUNT(*) total', $where, 'row');
@@ -353,7 +351,7 @@ class ExcelTemplateSend extends MY_Controller {
      * @return array
      */
     function agregaDatosSession($arreglo, $fila, $idbase) {
-
+        
         $validaNum = $this->validaNumero($arreglo["phone"]);
 
 
@@ -364,9 +362,9 @@ class ExcelTemplateSend extends MY_Controller {
             $consumo = $this->CargaexcelModel->buscar("usuarios", $campos, 'id=' . $this->idusuario, 'row');
             $servicio = $this->CargaexcelModel->buscar("servicios", 'coalesce(maximo,0) maximo', 'id=' . $this->session->userdata("idservicio"), 'row');
             $disponible = $servicio["maximo"] - $consumo["consumo"];
-
-            if ($disponible >= 1 || true) {
-//            if ($disponible >= 1) {
+            
+//            if ($disponible >= 1 || true) {
+            if ($disponible >= 1) {
                 $validado = $this->validaFila($arreglo);
                 if (is_array($validado)) {
 
@@ -382,13 +380,10 @@ class ExcelTemplateSend extends MY_Controller {
                     $this->insertaErrores(str_replace("error:", '', $validado), $arreglo, $idbase, $fila);
                 }
             } else {
-                echo "error2";
-                exit;
+
                 $this->insertaErrores("El usuario no cuenta con cupo suficiente", $arreglo, $idbase, $fila);
             }
         } else {
-            echo "error3";
-            exit;
             $this->insertaErrores($validaNum[1], $arreglo, $idbase, $fila);
         }
     }
