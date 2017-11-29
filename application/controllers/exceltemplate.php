@@ -11,6 +11,7 @@ class ExcelTemplate extends MY_Controller {
     private $estadoPerfil;
     private $estado;
     private $idbase = 0;
+    private $client_id = 0;
 
     public function __construct() {
 
@@ -151,7 +152,7 @@ class ExcelTemplate extends MY_Controller {
         $this->idbase = 0;
         $data = ($dataext == NULL) ? $this->input->post() : $dataext;
 
-
+        $this->client_id = $data["client_id"];
         /**
          * si el arreglo fue cargado se crea la base
          */
@@ -201,8 +202,8 @@ class ExcelTemplate extends MY_Controller {
             $client = $this->CargaexcelModel->Buscar("empresas", '*', $wh, "row");
 
             $where = " client_id=" . $client["id"];
-        
-            
+
+
             $respuesta["data"] = $this->CargaexcelModel->buscar("template_detail", '*', $where);
 
             echo json_encode($respuesta);
@@ -392,8 +393,8 @@ class ExcelTemplate extends MY_Controller {
      * @param type $arreglo
      */
     function insertRegistros($arreglo) {
-        $where = "id= " . $this->session->userdata("idempresa");
-        $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where, "row");
+//        $where = "id= " . $this->session->userdata("idempresa");
+//        $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where, "row");
 
         $in["phone"] = $arreglo[1];
         $in["campo1"] = $arreglo[2];
@@ -405,7 +406,7 @@ class ExcelTemplate extends MY_Controller {
         $in["filtro4"] = $arreglo[8];
         $in["filtro5"] = $arreglo[9];
         $in["filtro6"] = $arreglo[10];
-        $in["client_id"] = $data["client"]["id"];
+        $in["client_id"] = $this->client_id;
         $this->CargaexcelModel->insert("template_detail", $in);
     }
 

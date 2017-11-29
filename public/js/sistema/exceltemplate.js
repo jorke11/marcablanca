@@ -128,6 +128,7 @@ $(function () {
             $("#registrosOk").addClass("hidden");
             $("#descargaExcel").addClass("hidden");
             $(".modalaviso").modal("hide");
+            objeto.client_id = $("#cargar #client_id").val();
             objeto.idarchivo = archivo;
             objeto.idbase = idbase;
             objeto.fechaprogramado = $("#frmfecha #fecha").val();
