@@ -24,9 +24,8 @@
         /*background: url('../img/fondo-input-file.png') no-repeat;*/
     }
 </style>
-<script>
-
-</script>
+<script src="<?php echo base_url() ?>librerias/jquery/toastr.js"></script>
+<link rel="stylesheet" href="<?php echo base_url() ?>librerias/css/toastr.css">
 <script src="<?php base_url() ?>public/js/sistema/fechas.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <script src="<?php echo base_url() ?>public/js/sistema/exceltemplate.js"></script>

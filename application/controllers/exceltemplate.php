@@ -197,8 +197,12 @@ class ExcelTemplate extends MY_Controller {
                 }
             }
 
-            $where = "client_id=" . $this->session->userdata("client_id");
+            $wh = "id= " . $this->session->userdata("idempresa");
+            $client = $this->CargaexcelModel->Buscar("empresas", '*', $wh, "row");
 
+            $where = " client_id=" . $client["id"];
+        
+            
             $respuesta["data"] = $this->CargaexcelModel->buscar("template_detail", '*', $where);
 
             echo json_encode($respuesta);
@@ -389,8 +393,8 @@ class ExcelTemplate extends MY_Controller {
      */
     function insertRegistros($arreglo) {
         $where = "id= " . $this->session->userdata("idempresa");
-        $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where,"row");
-        
+        $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where, "row");
+
         $in["phone"] = $arreglo[1];
         $in["campo1"] = $arreglo[2];
         $in["campo2"] = $arreglo[3];

@@ -135,7 +135,10 @@ $(function () {
             $(".cargando").removeClass("hidden");
             var res = crud(objeto, 'exceltemplate/cargaExcel'), envioefectivo = 0;
             res.success(function (data) {
-
+                if(data!=null){
+                    toastr.success("Archivo cargado")
+                }
+                
                 $('#tblCargue').DataTable({
                     data: data.data,
                     destroy: true,
