@@ -314,7 +314,7 @@ function exceltempleate() {
                                     }
                                 });
                             }
-                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-2" onclick=obj.countData("filter2") value="' + j.filtro2 + '" name="filter2[]">' + j.filtro2 + '</li>';
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-2" onclick=obj.countData("filter2",' + client_id + ') value="' + j.filtro2 + '" name="filter2[]">' + j.filtro2 + '</li>';
                             checked = '';
                         })
                         $("#list-filter-2").html(html);
@@ -336,7 +336,7 @@ function exceltempleate() {
                                 });
                             }
 
-                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-3" onclick=obj.countData("filter3") value="' + j.filtro3 + '" name="filter3[]">' + j.filtro3 + '</li>';
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-3" onclick=obj.countData("filter3",' + client_id + ') value="' + j.filtro3 + '" name="filter3[]">' + j.filtro3 + '</li>';
                             checked = '';
                         })
                         $("#list-filter-3").html(html);
@@ -357,7 +357,7 @@ function exceltempleate() {
                                 });
                             }
 
-                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-4" onclick=obj.countData("filter4") value="' + j.filtro4 + '" name="filter4[]">' + j.filtro4 + '</li>';
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-4" onclick=obj.countData("filter4",' + client_id + ') value="' + j.filtro4 + '" name="filter4[]">' + j.filtro4 + '</li>';
                             checked = '';
                         })
                         $("#list-filter-4").html(html);
@@ -379,7 +379,7 @@ function exceltempleate() {
                                 });
                             }
 
-                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-5" onclick=obj.countData("filter5") value="' + j.filtro5 + '" name="filter5[]">' + j.filtro5 + '</li>';
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-5" onclick=obj.countData("filter5",' + client_id + ') value="' + j.filtro5 + '" name="filter5[]">' + j.filtro5 + '</li>';
                             checked = '';
                         })
                         $("#list-filter-5").html(html);
@@ -401,7 +401,7 @@ function exceltempleate() {
                                 });
                             }
 
-                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-6" onclick=obj.countData("filter6") value="' + j.filtro6 + '" name="filter6[]">' + j.filtro6 + '</li>';
+                            html += '<li class="list-group-item"><input type="checkbox" ' + checked + ' class="filter-6" onclick=obj.countData("filter6",' + client_id + ') value="' + j.filtro6 + '" name="filter6[]">' + j.filtro6 + '</li>';
                             checked = '';
                         })
                         $("#list-filter-6").html(html);

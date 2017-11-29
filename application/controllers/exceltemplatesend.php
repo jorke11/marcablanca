@@ -12,6 +12,7 @@ class ExcelTemplateSend extends MY_Controller {
     private $estado;
     private $idbase = 0;
     private $message;
+    private $client_id;
 
     public function __construct() {
 
@@ -76,7 +77,7 @@ class ExcelTemplateSend extends MY_Controller {
 
     function getDataFilter($in) {
 
-        $where = $this->ExceltemplateModel->getWhereFilter($in);
+        $where = $this->ExceltemplateModel->getWhereFilter($in,$this->client_id);
 
         if (strpos($where, "client_id") != 1) {
             return $this->CargaexcelModel->buscar("template_detail", '*', $where);
@@ -105,7 +106,7 @@ class ExcelTemplateSend extends MY_Controller {
 
     function countFilter() {
         $in = $this->input->post();
-
+        $this->client_id=$in["client_id"];
         $detail = $this->getDataFilter($in);
 
         $quantity = ($detail == false) ? 0 : count($detail);
