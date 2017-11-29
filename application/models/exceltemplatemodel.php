@@ -10,7 +10,7 @@ class ExceltemplateModel extends MY_Model {
         $this->load->database();
     }
 
-    public function getWhereFilter($in = NULL) {
+    public function getWhereFilter($in = NULL,$client_id) {
         $filter = '';
         $where = '';
         $cont = 0;
@@ -81,18 +81,17 @@ class ExceltemplateModel extends MY_Model {
 
 
         $where .= ($where == '') ? '' : ' AND';
+        if($client_id!=null){
+            $where .= " client_id=" . $client_id;
+        }
         
-        $wh = "id= " . $this->session->userdata("idempresa");
-        $client = $this->CargaexcelModel->Buscar("empresas", '*', $wh, "row");
-        
-        $where .= " client_id=" . $client["id"];
         
         return $where;
     }
 
-    public function getFilter($in) {
-
-        $where = $this->getWhereFilter($in);
+    public function getFilter($in,$client_id) {
+        
+        $where = $this->getWhereFilter($in,$client_id);
 
         if ($where != false) {
             $sql = "

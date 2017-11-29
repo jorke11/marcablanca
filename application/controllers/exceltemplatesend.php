@@ -56,7 +56,7 @@ class ExcelTemplateSend extends MY_Controller {
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
 
 
-        $filters = $this->ExceltemplateModel->getFilter(null);
+        $filters = $this->ExceltemplateModel->getFilter(null,null);
 
         $data["filter1"] = $filters["filter1"];
         $data["filter2"] = $filters["filter2"];
@@ -89,7 +89,7 @@ class ExcelTemplateSend extends MY_Controller {
     function getFilter() {
         $in = $this->input->post();
 
-        $filters = $this->ExceltemplateModel->getFilter($in);
+        $filters = $this->ExceltemplateModel->getFilter($in,$in["client_id"]);
 
         echo json_encode(["quantity" => 0, "filter" => $filters]);
     }
@@ -111,7 +111,7 @@ class ExcelTemplateSend extends MY_Controller {
         $quantity = ($detail == false) ? 0 : count($detail);
 
 
-        $filter = $this->ExceltemplateModel->getFilter($in);
+        $filter = $this->ExceltemplateModel->getFilter($in,$in["client_id"]);
 
         echo json_encode(["quantity" => $quantity, "data" => $detail, "filter" => $filter, "mark" => $in]);
     }
