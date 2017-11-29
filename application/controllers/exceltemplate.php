@@ -188,7 +188,7 @@ class ExcelTemplate extends MY_Controller {
             /**
              * Iteracion para almacenar los datos del archivo en un arreglo
              */
-            $this->CargaexcelModel->borrar("template_detail", array("client_id" => $this->session->userdata("client_id")));
+            $this->CargaexcelModel->borrar("template_detail", array("client_id" => $this->client_id));
 
             $contador = 0;
             foreach ($datos->sheets[0]['cells'] as $cont => $arreglo) {
