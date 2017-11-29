@@ -81,10 +81,12 @@ class ExceltemplateModel extends MY_Model {
 
 
         $where .= ($where == '') ? '' : ' AND';
-
-
-        $where .= " client_id=" . $this->session->userdata("client_id");
-
+        
+        $wh = "id= " . $this->session->userdata("idempresa");
+        $client = $this->CargaexcelModel->Buscar("empresas", '*', $wh, "row");
+        
+        $where .= " client_id=" . $client["id"];
+        
         return $where;
     }
 
