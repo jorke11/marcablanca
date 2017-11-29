@@ -136,10 +136,10 @@ $(function () {
             $(".cargando").removeClass("hidden");
             var res = crud(objeto, 'exceltemplate/cargaExcel'), envioefectivo = 0;
             res.success(function (data) {
-                if(data!=null){
+                if (data != null) {
                     toastr.success("Archivo cargado")
                 }
-                
+
                 $('#tblCargue').DataTable({
                     data: data.data,
                     destroy: true,
@@ -233,6 +233,23 @@ $(function () {
         $("#fecha").attr("disabled", false);
         $(".cargando").addClass("hidden");
         $("#descargaExcel").addClass("hidden");
+        $('#tblCargue').DataTable({
+            data: [],
+            destroy: true,
+            columns: [
+                {data: "id"},
+                {data: "phone"},
+                {data: "campo1"},
+                {data: "campo2"},
+                {data: "campo3"},
+                {data: "filtro1"},
+                {data: "filtro2"},
+                {data: "filtro3"},
+                {data: "filtro4"},
+                {data: "filtro5"},
+                {data: "filtro6"},
+            ],
+        });
     })
 
 
