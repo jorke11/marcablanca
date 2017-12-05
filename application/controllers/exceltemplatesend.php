@@ -204,6 +204,7 @@ class ExcelTemplateSend extends MY_Controller {
         $fechapro = '';
         $this->idbase = 0;
         $in = $this->input->post();
+        $this->client_id=$in["client_id"];
         $data = $this->getDataFilter($in);
 
 
