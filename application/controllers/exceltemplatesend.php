@@ -57,7 +57,7 @@ class ExcelTemplateSend extends MY_Controller {
         $data["client"] = $this->CargaexcelModel->Buscar("empresas", '*', $where);
 
 
-        $filters = $this->ExceltemplateModel->getFilter(null,null);
+        $filters = $this->ExceltemplateModel->getFilter(null, null);
 
         $data["filter1"] = $filters["filter1"];
         $data["filter2"] = $filters["filter2"];
@@ -77,12 +77,11 @@ class ExcelTemplateSend extends MY_Controller {
 
     function getDataFilter($in) {
 
-        $where = $this->ExceltemplateModel->getWhereFilter($in,$this->client_id);
+        $where = $this->ExceltemplateModel->getWhereFilter($in, $this->client_id);
 
         if (strpos($where, "client_id") != 1) {
-            return $this->CargaexcelModel->buscar("template_detail", '*', $where);
+            return $this->CargaexcelModel->buscar("template_detail", '*', $where); 
         } else {
-
             return false;
         }
     }
@@ -90,7 +89,7 @@ class ExcelTemplateSend extends MY_Controller {
     function getFilter() {
         $in = $this->input->post();
 
-        $filters = $this->ExceltemplateModel->getFilter($in,$in["client_id"]);
+        $filters = $this->ExceltemplateModel->getFilter($in, $in["client_id"]);
 
         echo json_encode(["quantity" => 0, "filter" => $filters]);
     }
@@ -106,13 +105,13 @@ class ExcelTemplateSend extends MY_Controller {
 
     function countFilter() {
         $in = $this->input->post();
-        $this->client_id=$in["client_id"];
+        $this->client_id = $in["client_id"];
         $detail = $this->getDataFilter($in);
 
         $quantity = ($detail == false) ? 0 : count($detail);
 
 
-        $filter = $this->ExceltemplateModel->getFilter($in,$in["client_id"]);
+        $filter = $this->ExceltemplateModel->getFilter($in, $in["client_id"]);
 
         echo json_encode(["quantity" => $quantity, "data" => $detail, "filter" => $filter, "mark" => $in]);
     }
@@ -231,7 +230,7 @@ class ExcelTemplateSend extends MY_Controller {
         foreach ($data as $cont => $arreglo) {
             $this->agregaDatosSession($arreglo, $cont, $this->idbase);
         }
-        
+
 
         $where = 'idbase=' . $this->idbase . " and error NOT ILIKE '%LISTA NEGRA%'";
         $error = $this->CargaexcelModel->buscar("errores", 'COUNT(*) total', $where, 'row');
@@ -352,7 +351,7 @@ class ExcelTemplateSend extends MY_Controller {
      * @return array
      */
     function agregaDatosSession($arreglo, $fila, $idbase) {
-        
+
         $validaNum = $this->validaNumero($arreglo["phone"]);
 
 
@@ -363,7 +362,7 @@ class ExcelTemplateSend extends MY_Controller {
             $consumo = $this->CargaexcelModel->buscar("usuarios", $campos, 'id=' . $this->idusuario, 'row');
             $servicio = $this->CargaexcelModel->buscar("servicios", 'coalesce(maximo,0) maximo', 'id=' . $this->session->userdata("idservicio"), 'row');
             $disponible = $servicio["maximo"] - $consumo["consumo"];
-            
+
 //            if ($disponible >= 1 || true) {
             if ($disponible >= 1) {
                 $validado = $this->validaFila($arreglo);
