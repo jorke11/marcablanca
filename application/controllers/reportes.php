@@ -71,9 +71,9 @@ class Reportes extends MY_Controller {
     }
 
     public function enviosCanales() {
-        $data["empresas"] = $this->ReportesModel->Buscar("empresas ORDER BY nombre", 'id,nombre', NULL, NULL, 'produccion');
-        $data["canales"] = $this->ReportesModel->Buscar("canales", 'id,nombre', NULL, NULL, 'produccion');
-        $data["carrier"] = $this->ReportesModel->Buscar("carries", 'codigo,nombre', NULL, NULL, 'produccion');
+        $data["empresas"] = $this->ReportesModel->Buscar("empresas ORDER BY nombre", 'id,nombre', NULL, NULL);
+        $data["canales"] = $this->ReportesModel->Buscar("canales", 'id,nombre', NULL, NULL);
+        $data["carrier"] = $this->ReportesModel->Buscar("carries", 'codigo,nombre', NULL, NULL);
         $data["vista"] = "informes/enviocanales";
         $this->load->view("template", $data);
     }
