@@ -61,10 +61,28 @@
             </div>
             <div class="col-lg-9">
                 <div class="row">
-                    <div class="col-lg-3">
-                        <span id="txtquantity">Contactos filtados:0</span>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <span id="txtquantity">Contactos filtados:0</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <table class="table table-bordered table-condensed" id="preMessage">
+                                    <thead>
+                                        <tr>
+                                            <th>Numero</th>
+                                            <th>Mensaje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-lg-9">
+
+                    <div class="col-lg-8">
                         <div class="row">
 
                             <div class="col-lg-12 col-md-12 col-center informacioncarga hidden">

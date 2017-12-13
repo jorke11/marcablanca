@@ -63,7 +63,7 @@ $(function () {
 function getFilter() {
     var form = {}, html = '', checked = '';
     form.client_id = $("#client_id").val();
-    
+
     $.ajax({
         url: 'exceltemplatesend/getFilter',
         type: "POST",
@@ -72,6 +72,9 @@ function getFilter() {
         dataType: 'JSON',
         success: function (data) {
             $("#txtquantity").html("Contactos filtados: " + data.quantity);
+            var html = '';
+
+
 
             if (data.filter.filter1 != undefined) {
                 html = '';
@@ -210,6 +213,9 @@ function processData() {
             } else {
                 $("#descargaExcel").addClass("hidden");
             }
+        }, error: function (xhr, ajaxOptions, thrownError) {
+
+            alert("Se presento un problema, comunicarse con sistemas");
         }
     });
 }
@@ -272,7 +278,7 @@ function exceltempleate() {
         form = obj.getDataFilter();
         form.type = type;
         form.client_id = client_id;
-
+        form.message = $("#frmtempĺateSend #message").val();
 
         $.ajax({
             url: $("#ruta").val() + 'exceltemplatesend/countFilter',
@@ -281,6 +287,12 @@ function exceltempleate() {
             dataType: 'JSON',
             success: function (data) {
                 $("#txtquantity").html("Contactos filtados: " + data.quantity);
+
+                $.each(data.messages, function (i, val) {
+                    html += "<tr><td>" + val.phone + "</td><td>" + val.message + "</td></tr>"
+                })
+
+                $("#preMessage tbody").html(html);
 
                 if (data.mark.type != "filter1") {
                     if (data.filter.filter1 != undefined) {

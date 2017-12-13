@@ -80,7 +80,7 @@ class ExcelTemplateSend extends MY_Controller {
         $where = $this->ExceltemplateModel->getWhereFilter($in, $this->client_id);
 
         if (strpos($where, "client_id") != 1) {
-            return $this->CargaexcelModel->buscar("template_detail", '*', $where); 
+            return $this->CargaexcelModel->buscar("template_detail", '*', $where);
         } else {
             return false;
         }
@@ -105,6 +105,7 @@ class ExcelTemplateSend extends MY_Controller {
 
     function countFilter() {
         $in = $this->input->post();
+
         $this->client_id = $in["client_id"];
         $detail = $this->getDataFilter($in);
 
@@ -112,8 +113,34 @@ class ExcelTemplateSend extends MY_Controller {
 
 
         $filter = $this->ExceltemplateModel->getFilter($in, $in["client_id"]);
+        $mensajes = $this->ExceltemplateModel->buscar("template_detail", "*", "client_id=" . $this->client_id . " LIMIT 5");
 
-        echo json_encode(["quantity" => $quantity, "data" => $detail, "filter" => $filter, "mark" => $in]);
+
+
+        $this->message = $in["message"];
+
+        foreach ($mensajes as $i => $fila) {
+
+            if (isset($fila["campo1"]) && $fila["campo1"] != '') {
+                $fila["campo1"] = $this->LimpiaMensaje($fila["campo1"]);
+                $mensajes[$i]["message"] = str_replace("%campo1%", $fila["campo1"], $this->message);
+            }
+
+
+            if (isset($fila["campo2"]) && $fila["campo2"] != '') {
+                $fila["campo2"] = $this->LimpiaMensaje($fila["campo2"]);
+                $mensajes[$i]["message"] = str_replace("%campo2%", $fila["campo2"], $mensajes[$i]["message"]);
+            }
+
+            if (isset($fila["campo3"]) && $fila["campo3"] != '') {
+                if (strpos($mensajes[$i]["message"], "%campo3%") !== false) {
+                    $fila["campo3"] = $this->LimpiaMensaje($fila["campo3"]);
+                    $mensajes[$i]["message"] = str_replace("%campo3%", $fila["campo3"], $mensajes[$i]["message"]);
+                }
+            }
+        }
+
+        echo json_encode(["quantity" => $quantity, "data" => $detail, "filter" => $filter, "mark" => $in, "messages" => $mensajes]);
     }
 
     function borrarArchivo() {
@@ -204,7 +231,7 @@ class ExcelTemplateSend extends MY_Controller {
         $fechapro = '';
         $this->idbase = 0;
         $in = $this->input->post();
-        $this->client_id=$in["client_id"];
+        $this->client_id = $in["client_id"];
         $data = $this->getDataFilter($in);
 
 
