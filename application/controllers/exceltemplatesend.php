@@ -113,34 +113,40 @@ class ExcelTemplateSend extends MY_Controller {
 
 
         $filter = $this->ExceltemplateModel->getFilter($in, $in["client_id"]);
-        $mensajes = $this->ExceltemplateModel->buscar("template_detail", "*", "client_id=" . $this->client_id . " LIMIT 5");
 
 
 
         $this->message = $in["message"];
 
-        foreach ($mensajes as $i => $fila) {
+        foreach ($detail as $i => $fila) {
 
             if (isset($fila["campo1"]) && $fila["campo1"] != '') {
                 $fila["campo1"] = $this->LimpiaMensaje($fila["campo1"]);
-                $mensajes[$i]["message"] = str_replace("%campo1%", $fila["campo1"], $this->message);
+                $detail[$i]["message"] = str_replace("%campo1%", $fila["campo1"], $this->message);
             }
 
 
             if (isset($fila["campo2"]) && $fila["campo2"] != '') {
                 $fila["campo2"] = $this->LimpiaMensaje($fila["campo2"]);
-                $mensajes[$i]["message"] = str_replace("%campo2%", $fila["campo2"], $mensajes[$i]["message"]);
+                $detail[$i]["message"] = str_replace("%campo2%", $fila["campo2"], $detail[$i]["message"]);
             }
 
             if (isset($fila["campo3"]) && $fila["campo3"] != '') {
-                if (strpos($mensajes[$i]["message"], "%campo3%") !== false) {
+                if (strpos($detail[$i]["message"], "%campo3%") !== false) {
                     $fila["campo3"] = $this->LimpiaMensaje($fila["campo3"]);
-                    $mensajes[$i]["message"] = str_replace("%campo3%", $fila["campo3"], $mensajes[$i]["message"]);
+                    $detail[$i]["message"] = str_replace("%campo3%", $fila["campo3"], $detail[$i]["message"]);
                 }
             }
         }
 
-        echo json_encode(["quantity" => $quantity, "data" => $detail, "filter" => $filter, "mark" => $in, "messages" => $mensajes]);
+        $content = array();
+        for ($i = 0; $i <= 5; $i++) {
+            if (isset($detail[$i])) {
+                $content[] = $detail[$i];
+            }
+        }
+
+        echo json_encode(["quantity" => $quantity, "data" => $detail, "filter" => $filter, "mark" => $in, "messages" => $content]);
     }
 
     function borrarArchivo() {
