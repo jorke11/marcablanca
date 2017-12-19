@@ -1,4 +1,4 @@
-var valida, path = "", intervalo;
+var valida, path = "", intervalo, objexcel = {};
 $(function () {
     var smslong = 0, cupo = 0, concatena = 0, next = 0;
     $("#message").cuentaPalabras("#contentMessage");
@@ -17,11 +17,12 @@ $(function () {
 
     })
 
+
+
     $("#btnConsolidate").click(function () {
         var msg = '';
 
         $("#btnSendMsg").attr("disabled", false);
-
 
         if ($("#message").val() != '') {
             $.ajax({
@@ -30,6 +31,8 @@ $(function () {
                 dataType: 'JSON',
                 async: false,
                 success: (function (data) {
+
+
                     concatena = data.concatena;
                     next = data.next;
                     cupo = data.cupo.disponible;
@@ -53,6 +56,42 @@ $(function () {
         }
 
     })
+
+    $("#cancelarcarga").click(function () {
+        var obj = {};
+        obj.idbase = objexcel.idbase;
+        obj.tipo = "cancelado";
+        $("#nuevo").attr("disabled", false);
+        var res = crud(obj, 'exceltemplatesend/procesarCarga');
+        res.success(function (data) {
+            $("#confirmacioncarga").attr("disabled", true);
+            mensaje("alertaconfimacion", 'error', "<b>" + data.mensaje + "!</b>");
+        })
+    })
+
+    $("#confirmacioncarga").click(function () {
+
+        var obj = {};
+        obj.idbase = objexcel.idbase;
+        obj.tipo = 'confirmado';
+        $("#nuevo").attr("disabled", false);
+
+        var res = crud(obj, 'exceltemplatesend/procesarCarga');
+        res.success(function (data) {
+
+            if (data.errores != undefined) {
+                mensaje("alertaconfimacion", 'error', '<b>Sin cupo sucifiente</b>');
+            } else {
+                $("#confirmacioncarga").attr("disabled", true);
+                mensaje("alertaconfimacion", null, "<b>" + data.mensaje + "!</b>");
+                $("#cancelarcarga").attr("disabled", true);
+
+            }
+            $("#cupo").html(data.cupo.disponible + " SMS");
+
+        })
+    })
+
 
     $("#client_id").change(function () {
         getFilter();
@@ -189,6 +228,7 @@ function processData() {
         data: form,
         dataType: 'JSON',
         success: function (data) {
+            objexcel = data;
             var envioefectivo = 0, clase = '';
             $("#fecha").attr("disabled", true);
             clase = (data.duplicados == 0) ? '' : 'error';

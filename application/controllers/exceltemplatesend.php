@@ -312,6 +312,7 @@ class ExcelTemplateSend extends MY_Controller {
         $arc = $this->CargaexcelModel->buscar("registros", 'count(*) registros', $where);
         echo json_encode($arc);
     }
+    
 
     function asignaKey($arreglo, $keys) {
         $cont = 0;
