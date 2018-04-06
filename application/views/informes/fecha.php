@@ -28,7 +28,7 @@
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="input-group">
-                                    <input type="text" class="form-control inputProgramados" id="inicio" name="inicio" placeholder="dd-md-YYYY">
+                                    <input type="text" class="form-control fechas inputProgramados" id="inicio" name="inicio" placeholder="dd-md-YYYY">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="button">
                                             <span class="glyphicon glyphicon-calendar"></span>

@@ -90,6 +90,7 @@ class ExcelTemplateSend extends MY_Controller {
         $in = $this->input->post();
 
         $filters = $this->ExceltemplateModel->getFilter($in, $in["client_id"]);
+//        $filters = $this->ExceltemplateModel->getFilter($in, 23);
 
         echo json_encode(["quantity" => 0, "filter" => $filters]);
     }
@@ -113,6 +114,7 @@ class ExcelTemplateSend extends MY_Controller {
 
 
         $filter = $this->ExceltemplateModel->getFilter($in, $in["client_id"]);
+//        $filter = $this->ExceltemplateModel->getFilter($in, 23);
 
 
 
@@ -140,7 +142,7 @@ class ExcelTemplateSend extends MY_Controller {
         }
 
         $content = array();
-        for ($i = 0; $i <= 5; $i++) {
+        for ($i = 0; $i <= 20; $i++) {
             if (isset($detail[$i])) {
                 $content[] = $detail[$i];
             }

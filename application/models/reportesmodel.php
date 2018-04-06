@@ -72,14 +72,20 @@ class ReportesModel extends MY_Model {
      * @return array
      */
     public function fecha($inicio, $final) {
+        $user = '';
+        if ($this->session->userdata("idperfil") != 5) {
+            $user = "usr.id=" . $this->session->userdata("idusuario") . " AND ";
+        }
+
 
         $sql = "
                 SELECT res.id,usr.usuario,car.nombre as operador,res.fecha,res.cantidad
                 FROM resumenes as res
                     JOIN usuarios AS usr ON res.idusuario=usr.id
                     JOIN carries AS car ON res.idcarrie=car.id
-                WHERE usr.id=" . $this->session->userdata("idusuario") . " AND res.fecha BETWEEN '" . $inicio . "' AND '" . $final . "'"
+                WHERE $user res.fecha BETWEEN '" . $inicio . "' AND '" . $final . "'"
                 . "ORDER BY res.fecha DESC";
+
         $res = $this->db->query($sql);
         return $res->result_array();
     }

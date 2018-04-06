@@ -120,6 +120,7 @@ class ExceltemplateModel extends MY_Model {
             from template_detail 
             where " . $where . "
             group by 1 order by 1";
+//            echo 
             $res["filter4"] = $this->db->query($sql)->result_array();
             $sql = "
             select filtro5

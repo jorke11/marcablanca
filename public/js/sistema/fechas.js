@@ -6,7 +6,7 @@ $(function () {
             obj.inicio = inicio;
             obj.final = final;
 
-            var res = crud(obj, 'reportes/datosFecha');
+            var res = crud(obj, 'datosFecha');
 
             res.success(function (data) {
                 $("#tablafecha tbody").empty();
