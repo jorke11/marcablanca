@@ -73,18 +73,34 @@ class ReportesModel extends MY_Model {
      */
     public function fecha($inicio, $final) {
         $user = '';
+
+
         if ($this->session->userdata("idperfil") != 5) {
             $user = "usr.id=" . $this->session->userdata("idusuario") . " AND ";
         }
 
+        if ($this->session->userdata("idperfil") == 1) {
+            $sql = "select id from usuarios where idmarca=" . $this->session->userdata("client_id");
+
+            $res = $this->db->query($sql);
+
+
+            $user_id = '';
+            foreach ($res->result_array() as $value) {
+                $user_id .= ($user_id == '') ? '' : ',';
+                $user_id .= $value["id"];
+            }
+
+            $user = "usr.id IN (" . $user_id . ") AND ";
+        }
 
         $sql = "
-                SELECT res.id,usr.usuario,car.nombre as operador,res.fecha,res.cantidad
-                FROM resumenes as res
-                    JOIN usuarios AS usr ON res.idusuario=usr.id
-                    JOIN carries AS car ON res.idcarrie=car.id
-                WHERE $user res.fecha BETWEEN '" . $inicio . "' AND '" . $final . "'"
-                . "ORDER BY res.fecha DESC";
+        SELECT res.id, usr.usuario, car.nombre as operador, res.fecha, res.cantidad
+        FROM resumenes as res
+        JOIN usuarios AS usr ON res.idusuario = usr.id
+        JOIN carries AS car ON res.idcarrie = car.id
+        WHERE $user res.fecha BETWEEN '" . $inicio . "' AND '" . $final . "'"
+                . " ORDER BY res.fecha DESC";
 
         $res = $this->db->query($sql);
         return $res->result_array();
@@ -92,7 +108,7 @@ class ReportesModel extends MY_Model {
 
     public function bases() {
 
-        $administrador = ($this->session->userdata("idperfil") == 1) ? '' : " idusuario=" . $this->session->userdata("idusuario") . " AND ";
+        $administrador = ($this->session->userdata("idperfil") == 1) ? '' : " idusuario = " . $this->session->userdata("idusuario") . " AND ";
 
 
         $fecha = date('Y-m-j');
@@ -100,15 +116,15 @@ class ReportesModel extends MY_Model {
         $nuevafecha = date('Y-m-j', $nuevafecha);
 
         $sql = "
-                SELECT 
-                    bases.id,bases.nombre,bases.fecha, registros,errores,coalesce(bases.enviados,0) enviados,
-                    ((bases.registros-coalesce(bases.errores,0))-coalesce(bases.enviados,0)) pendientes,usuarios.usuario
-                FROM bases
-                JOIN usuarios ON bases.idusuario=usuarios.id and usuarios.idmarca = " . $this->session->userdata("client_id") . "
-                WHERE $administrador
-                     fecha>'" . $nuevafecha . "'
-                AND bases.estado='1'
-                ORDER BY fecha desc";
+    SELECT
+            bases.id, bases.nombre, bases.fecha, registros, errores, coalesce(bases.enviados, 0) enviados,
+         ((bases.registros-coalesce(bases.errores, 0))-coalesce(bases.enviados, 0)) pendientes, usuarios.usuario
+        FROM bases
+        JOIN usuarios ON bases.idusuario = usuarios.id and usuarios.idmarca = " . $this->session->userdata("client_id") . "
+        WHERE $administrador
+        fecha>'" . $nuevafecha . "'
+        AND bases.estado = '1'
+        ORDER BY fecha desc";
         $res = $this->db->query($sql);
         return $res->result_array();
     }
@@ -119,7 +135,7 @@ class ReportesModel extends MY_Model {
         $cliente = '';
         $fecha = " BETWEEN '" . $data["inicio"] . " 00:00' and '" . $data["final"] . " 23:59'";
         if (isset($data["idcarrier"]) && ($data["idcarrier"] != 0)) {
-            $carrier = "AND idcarrie=" . $data["idcarrier"];
+            $carrier = "AND idcarrie = " . $data["idcarrier"];
         }
         if (isset($data["idcanal"]) && ($data["idcanal"] != 0)) {
             $canal = 'AND idcanal=' . $data["idcanal"];
@@ -128,21 +144,21 @@ class ReportesModel extends MY_Model {
         if (isset($data["empresa"])) {
             $cliente = "AND idbase IN (
                 SELECT id
-		FROM bases 
+                FROM bases
                 WHERE idusuario IN(
-                    SELECT id 
-                    FROM usuarios 
-                    WHERE idempresa IN(" . implode(",", $data["empresa"]) . ")
-                        AND fecha $fecha)
-                )  ";
+                SELECT id
+                FROM usuarios
+                WHERE idempresa IN(" . implode(", ", $data["empresa"]) . ")
+                AND fecha $fecha)
+                ) ";
         }
         $sql = "
-                SELECT canales.nombre canal,count(*) envio 
-                FROM registros  JOIN canales ON canales.id = registros.idcanal
-                WHERE registros.estado='1' 
+                SELECT canales.nombre canal, count(*) envio
+                FROM registros JOIN canales ON canales.id = registros.idcanal
+                WHERE registros.estado = '1'
                 AND fechaenvio $fecha
-                    $carrier $canal $cliente
-                GROUP BY idcanal,canales.nombre ";
+                $carrier $canal $cliente
+                GROUP BY idcanal, canales.nombre ";
 
         $res = $this->db->query($sql);
         return $res->result_array();
@@ -152,22 +168,22 @@ class ReportesModel extends MY_Model {
         $usuarios = '';
 
         if (isset($data["idusuario"]) && ($data["idusuario"][0] != 0)) {
-            $usuarios = ' AND us.id IN (' . implode(",", $data["idusuario"]) . ')';
+            $usuarios = ' AND us.id IN (' . implode(", ", $data["idusuario"]) . ')';
         }
 
 
 
         $sql = "
-                SELECT 
-                        us.nombre usuario,ser.nombre plan, ser.maximo cupototal,
-                        (ser.maximo - (us.enviados + us.pendientes)) disponible,
-                        ser.maximo- (ser.maximo - (us.enviados + us.pendientes)) consumido
-                FROM usuarios us
-                JOIN servicios ser ON ser.id=us.idservicio
-		WHERE us.estado='1'
-                $usuarios
-                    ORDER BY us.nombre
-                ";
+            SELECT
+            us.nombre usuario, ser.nombre plan, ser.maximo cupototal,
+             (ser.maximo - (us.enviados + us.pendientes)) disponible,
+             ser.maximo- (ser.maximo - (us.enviados + us.pendientes)) consumido
+            FROM usuarios us
+            JOIN servicios ser ON ser.id = us.idservicio
+            WHERE us.estado = '1'
+            $usuarios
+            ORDER BY us.nombre
+";
         $res = $this->db->query($sql);
         return $res->result_array();
     }
